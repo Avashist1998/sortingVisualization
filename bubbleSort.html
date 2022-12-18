@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <link rel="stylesheet" href="bubbleSort.css">
+    </head>
+    <body>
+        <div style="text-align: center;"> 
+            <h1>Bubble Sort</h1>
+            <div id="userInput">
+                <h3>Add your data below </h3>
+                <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
+                <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Submit</button>
+                <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
+            </div>
+            <div id="main" style="display: none;">
+                <div id="data">
+                    <h3>Input Data</h3>
+                    <p1 id="inputData"></p1>
+                    <h3>Sorted Data</h3>
+                    <p1 id="sortedInputData"></p1>
+                </div>
+                <div id="chartBlock">
+                    <div id="bubbleSortChar"></div>
+                    <div id="navigationButton">
+                        <button id="resetButton" type="button" onclick=reset()>Reset</button>
+                        <button id="nextButton" type="button" onclick=sortStep()>Next</button>
+                        <button id="playButton" type="button" onclick=startRun()>Play</button>
+                        <button id="pauseButton" type="button" onclick=pauseRun()>Pause</button>
+                    </div>
+                </div>
+                <div id="informationBlock">
+                    <div id="codeBlock">
+
+                    </div>
+                    <div id="backgroundInfo">
+                        <p id="wikiBlock"></p>
+                        <p id="spaceTimeComplexty"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+
+            </div>
+        </div>
+
+        <script type="text/javascript" src="bubbleSort.js">
+
+        </script>
+
+    </body>
+</html>
