@@ -1,0 +1,9 @@
+a:visited {
+    text-decoration: none;
+    color: teal
+}
+
+
+a:hover { text-decoration: none; color:yellow; }
+a:focus { text-decoration: none; color:orange; }
+a:active { text-decoration: none; color:teal; }
