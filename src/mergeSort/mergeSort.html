@@ -5,16 +5,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="insertSort.css">
+        <link rel="stylesheet" href="mergeSort.css">
     </head>
     <body>
         <div> 
-            <h1 style="text-align: center;">Insert Sort</h1>
+            <h1 style="text-align: center;">Merge Sort</h1>
             <div id="userInput" style="text-align: center;">
                 <h3>Add your data below </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
                 <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Submit</button>
                 <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
+                <h3 id="smallInputWarning" style="color:orange;display: none;">Input has too few elements</h3>
             </div>
             <div id="main" style="display: none; text-align: center;">
                 <div id="data">
@@ -24,7 +25,7 @@
                     <p1 id="sortedInputData"></p1>
                 </div>
                 <div id="chartBlock">
-                    <div id="insertSortChart"></div>
+                    <div id="mergeSortChart"></div>
                     <div id="navigationButton">
                         <button id="resetButton" type="button" onclick=reset()>Reset</button>
                         <button id="nextButton" type="button" onclick=sortStep()>Next</button>
@@ -34,16 +35,40 @@
                 </div>
                 <div id="informationBlock">
                     <div id="codeBlock" style="text-align: center;">
-                        <h3>Insert Sort source code</h3>
+                        <h3>Merge Sort source code</h3>
                         <pre style="text-align: left;">
-                            def sort(arr: List[int]) -> List[int]: 
-                                for index in range(1, len(arr)):
-                                    current_val = arr[index]
-                                    j = index - 1
-                                        while (j >= 0 and current_val < arr[j]):
-                                            arr[j + 1] = arr[j]
-                                            j -= 1
-                                        arr[j + 1] = current_val
+                            def merge_routine(arr_a: List[int], arr_b: List[int]) -> List[int]:
+                                res = []
+                                while (len(arr_a) > 0 or len(arr_b) > 0):
+                                    if len(arr_a) == 0:
+                                        res.append(arr_b.pop(0))
+                        
+                                    elif len(arr_b) == 0:
+                                        res.append(arr_a.pop(0))
+                        
+                                    elif arr_a[0] < arr_b[0]:
+                                        res.append(arr_a.pop(0))
+                                    else:
+                                        res.append(arr_b.pop(0))
+                                return res
+                        
+                            def sort(arr: List[int]) -> List[int]:
+                                if len(arr) == 1:
+                                    pass
+
+                                elif len(arr) == 2:
+                                    if arr[0] > arr[1]:
+                                        arr[0], arr[1] = arr[1], arr[0]
+                        
+                                else:
+                                    mid = len(arr) // 2
+                        
+                                    left, right = arr[:mid], arr[mid:]
+                                    left, right = sort(left), self.sort(right)
+                                    sorted_arr = merge_routine(left, right)
+                        
+                                    for i, _ in enumerate(arr):
+                                        arr[i] = sorted_arr[i]
                                 return arr
                         </pre>
                     </div>
@@ -59,7 +84,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="insertSort.js">
+        <script type="text/javascript" src="mergeSort.js">
 
         </script>
 
