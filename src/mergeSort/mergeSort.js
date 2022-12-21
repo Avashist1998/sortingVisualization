@@ -1,18 +1,18 @@
-const transitionTime = 250
-const freeRunTime = transitionTime + 100
+const transitionTime = 5
+const freeRunTime = transitionTime + 10
 
-var timer;
-var stepSize;
-var shiftCount;
-var needSwap;
-var mergeSwap;
-var firstStep;
-var mergeStack;
-var interStack;
-var numberOfSteps;
-var twoPointerData;
-var animationCompleted;
-var mergeStackCompleted;
+var timer = null
+var stepSize = 2
+var shiftCount = 0
+var needSwap = false
+var mergeStack = []
+var interStack = []
+var mergeSwap = false
+var firstStep = true
+var numberOfSteps = 0
+var twoPointerData = null
+var animationCompleted = false
+var mergeStackCompleted = false
 
 var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 
@@ -23,6 +23,8 @@ function ArrayToChartData (nums, color) {
     })
     return data;
 }
+
+
 
 function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.id = id
@@ -134,6 +136,7 @@ function updateRender () {
     .style("fill", i => globalDataObject.data[i].color);
 }
 
+
 function swap() {
     const currStep = globalDataObject.step
     if (globalDataObject.data[currStep].value > globalDataObject.data[currStep+1].value) {
@@ -225,6 +228,7 @@ function mergeStackStep() {
     }
 }
 
+
 function sortStep() {
     const currStep = globalDataObject.step
     if (globalDataObject.sorted) {
@@ -282,6 +286,7 @@ function sortStep() {
     updateRender();
 }
 
+
 function startRun(){
     document.getElementById("nextButton").className = "disabled";
     if (globalDataObject.sorted) {
@@ -296,6 +301,7 @@ function startRun(){
     }, freeRunTime)
 }
 
+
 function pauseRun() {
     clearInterval(timer);
     document.getElementById("nextButton").className = "button";
@@ -308,8 +314,10 @@ function sortedUpdateButton() {
     document.getElementById("pauseButton").className = "disabled";
 }
 
-function initalizeVar () {
-    timer = null
+
+function reset() {
+
+    clearInterval(timer);
     stepSize = 2
     shiftCount = 0
     needSwap = false
@@ -321,14 +329,8 @@ function initalizeVar () {
     twoPointerData = null
     animationCompleted = false
     mergeStackCompleted = false
-}
-
-
-
-function reset() {
-    clearInterval(timer);
     d3.select("svg").remove()
-
+    
     document.getElementById("playButton").className = "button";
     document.getElementById("pauseButton").className = "button";
     document.getElementById("nextButton").className = "button";
@@ -339,6 +341,7 @@ function reset() {
     document.getElementById('invalidInputWarning').style.display = "none"
 
 }
+
 
 function validateData(userInput) {
     if (userInput.length === 0) {
@@ -365,7 +368,6 @@ function convertData(userInput) {
 
 tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
-    initalizeVar()
     const userInput = document.getElementById('listDataInput').value
     if (!validateData(userInput)) {
         document.getElementById('invalidInputWarning').style.display = "block"
@@ -384,3 +386,4 @@ function renderGraphFromUserInput() {
         return createGraph(unsortedInputData, "mergeSortChart", "steelblue", "red");
     }
 }
+

@@ -1,36 +1,37 @@
-@import "../../index.css";
 
 /* added background color */
 html {
     background-color: #836953;
 }
-
 body {
-    margin-top:10%;
-    margin-left:5%;
-    margin-right:5%;
-    margin-bottom:10%;
-    border:color #fff5d7;
+    margin-top:200px;
+    margin-left:200px;
+    margin-right:200px;
+    margin-bottom: 200px;
     border:8px outset #836953;
+    border:color #fff5d7;
     background-color: #fff5d7;
 }
-
 #listDataInput {
+    width: 1000px; 
+    font-size: 16pt; 
+    padding: 15px;
+    margin-bottom: 10px;
     /* Change search bar color */
     background-color: #f6f6eb;
 }
-
 h1 {
+    font-family: "Bubbly", sans-serif;
+    font-size: 72px;
     color: #ff5e6c;
-    font-family: "Bubbly", sans-serif;
 }
-
 h3 {
-    color: #964B00;
+    margin-right: 780px;
     font-family: "Bubbly", sans-serif;
+    color: #964B00;
+    font-size: 30px;
     background-position: left 10px center;
 }
-
 #Description {
     font-family:"Lucida Console", "Courier New", monospace;
     font-size:15px;
@@ -38,21 +39,41 @@ h3 {
     margin-left:100px;
     margin-right:200px;
 }
-
 #inputData {
-    border-bottom: 5px solid #F3DDF2;
     font-family:"Lucida Console", "Courier New", monospace;
+    font-size:20px;
+    border-bottom: 5px solid #F3DDF2;
 }
-
 #sortedInputData {
-    border-bottom: 5px solid #F3DDF2;
     font-family:"Lucida Console", "Courier New", monospace;
+    font-size:20px;
+    border-bottom: 5px solid #F3DDF2;
+}
+#chartBlock {
+    margin-top:30px;
+}
+#code{
+    margin-left:100px;
+    margin-right:200px;
+    border:8px outset #836953;
+    border:color #fff5d7;
+    background-color: #fff5d7;
+}
+#addData {
+    padding-left: 20px;
+}
+button {
+    margin-top:10px;
+    margin-bottom: 50px;
+    padding: 10px;
+    border: none;
+    font-size: 25px;
+    border-radius: 8px;
 }
 
-#code{
-    border:color #fff5d7;
-    border:8px outset #836953;
-    background-color: #fff5d7;
+.disabled {
+    opacity: 0.1;
+    cursor: not-allowed;
 }
 
 #listSubmitData {
@@ -63,4 +84,32 @@ h3 {
 #listSubmitData:hover {
     /* Change submit button color */
     background-color: #2F4C39;
+}
+
+
+#resetButton {
+    background-color: lightcoral;
+}
+
+#resetButton:hover {
+    background-color: darkred;
+}
+
+#nextButton {
+    background-color: lightgreen;
+}
+
+
+#nextButton:hover {
+    background-color: darkgreen;
+}
+
+
+#pauseButton {
+    background-color: lightsalmon;
+}
+
+
+#pauseButton:hover {
+    background-color: salmon;
 }
