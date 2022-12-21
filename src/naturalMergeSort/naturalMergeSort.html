@@ -5,11 +5,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="mergeSort.css">
+        <link rel="stylesheet" href="naturalMergeSort.css">
     </head>
     <body>
         <div> 
-            <h1 style="text-align: center;">Merge Sort</h1>
+            <h1 style="text-align: center;">Natural Merge Sort</h1>
             <div id="userInput" style="text-align: center;">
                 <h3>Add your data below </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
@@ -25,7 +25,7 @@
                     <p1 id="sortedInputData"></p1>
                 </div>
                 <div id="chartBlock">
-                    <div id="mergeSortChart"></div>
+                    <div id="naturalMergeSortChart"></div>
                     <div id="navigationButton">
                         <button id="resetButton" type="button" onclick=reset()>Reset</button>
                         <button id="nextButton" type="button" onclick=sortStep()>Next</button>
@@ -35,7 +35,7 @@
                 </div>
                 <div id="informationBlock">
                     <div id="codeBlock" style="text-align: center;">
-                        <h3>Merge Sort source code</h3>
+                        <h3>Natural Merge Sort source code</h3>
                         <pre style="text-align: left;">
                             def merge_routine(arr_a: List[int], arr_b: List[int]) -> List[int]:
                                 res = []
@@ -51,25 +51,27 @@
                                     else:
                                         res.append(arr_b.pop(0))
                                 return res
-                        
+                            
+                            def split_routine(arr: List[int]) -> List[List[int]]:
+                                n = 0
+                                res = []
+                                sorted_sub_list = []
+                                while n < len(arr)-1:
+                                    sorted_sub_list.append(arr[n])
+                                    if arr[n] > arr[n+1]:
+                                        res.append(sorted_sub_list)
+                                        sorted_sub_list = []
+                                sorted_sub_list.append(arr[n])
+                                res.append(sorted_sub_list)
+                                return res
+                            
                             def sort(arr: List[int]) -> List[int]:
-                                if len(arr) == 1:
-                                    pass
-
-                                elif len(arr) == 2:
-                                    if arr[0] > arr[1]:
-                                        arr[0], arr[1] = arr[1], arr[0]
-                        
-                                else:
-                                    mid = len(arr) // 2
-                        
-                                    left, right = arr[:mid], arr[mid:]
-                                    left, right = sort(left), self.sort(right)
-                                    sorted_arr = merge_routine(left, right)
-                        
-                                    for i, _ in enumerate(arr):
-                                        arr[i] = sorted_arr[i]
-                                return arr
+                                mergeStack = split_routine(arr)
+                                while len(mergeStack) > 1:
+                                    arr_a = mergeStack.pop(0)
+                                    arr_b = mergeStack.pop(0)
+                                    mergeStack.append(merge_routine(arr_a, arr_b))
+                                return mergeStack[0]
                         </pre>
                     </div>
                     <div id="backgroundInfo">
@@ -79,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="mergeSort.js">
+        <script type="text/javascript" src="naturalMergeSort.js">
         </script>
 
     </body>
