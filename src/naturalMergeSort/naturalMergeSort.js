@@ -1,8 +1,19 @@
 const transitionTime = 250
 const freeRunTime = transitionTime + 100
+
 var timer;
+var shiftCount;
 var needSwap;
-var globalDataObject;
+var mergeSwap;
+var firstStep;
+var mergeStack;
+var interStack;
+var numberOfSteps;
+var twoPointerData;
+var animationCompleted;
+var mergeStackCompleted;
+
+var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 
 function ArrayToChartData (nums, color) {
     let data = []
@@ -12,11 +23,9 @@ function ArrayToChartData (nums, color) {
     return data;
 }
 
-
-
 function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.id = id
-    globalDataObject.step = 0
+    globalDataObject.step = -1
     globalDataObject.sorted = false
     globalDataObject.baseColor = baseColor
     globalDataObject.sortedIndex = 0
@@ -124,55 +133,119 @@ function updateRender () {
     .style("fill", i => globalDataObject.data[i].color);
 }
 
+function sortedAnimation() {
+    const currStep = globalDataObject.step
+    for (let i = 0; i < globalDataObject.data.length; i++) {
 
-function sortStep() {
-
-    if (globalDataObject.sorted) {
-        return
+        globalDataObject.data[i].color = "green"
     }
-
-    if (needSwap) {
-        const tmp = globalDataObject.data[globalDataObject.step-1]
-        globalDataObject.data[globalDataObject.step-1] = globalDataObject.data[globalDataObject.step]
-        globalDataObject.data[globalDataObject.step] = tmp
-        globalDataObject.data[globalDataObject.step-1].color = globalDataObject.highLightColor;
-        globalDataObject.data[globalDataObject.step].color = "yellow"
-        needSwap = false
-        globalDataObject.step -= 1
-    }
-    else {
-
-        if (globalDataObject.sortedIndex === 0 ) {
-            globalDataObject.data[globalDataObject.step].color = "green"
-            globalDataObject.sortedIndex += 1
-            globalDataObject.step += 1
-        }
-
-        else {
-            globalDataObject.data[globalDataObject.step].color = globalDataObject.highLightColor;
-            if (globalDataObject.step > 0 && globalDataObject.data[globalDataObject.step-1].value >  globalDataObject.data[globalDataObject.step].value) {
-                globalDataObject.data[globalDataObject.step-1].color = "yellow";
-                needSwap = true
-            } else {
-                globalDataObject.sortedIndex += 1
-                globalDataObject.step = globalDataObject.sortedIndex
-                for (let i = 0; i < globalDataObject.sortedIndex; i++){
-                    globalDataObject.data[i].color = "green";
-                }
-            }
-
-            if (globalDataObject.sortedIndex === globalDataObject.data.length) {
-                globalDataObject.sorted = true
-                sortedUpdateButton()
-        
-            }
-
-        }    
-    }
-    
-    updateRender();
+    animationCompleted = true
 }
 
+function mergeStackStep() {
+    if (twoPointerData) {
+        console.log("current right pointer: ", twoPointerData[0], " curr left pointer : ", twoPointerData[3]);
+        if (mergeSwap) {
+            const tmp = globalDataObject.data[twoPointerData[3]]
+            for (let i = twoPointerData[3]; i > twoPointerData[0]; i--) {
+                globalDataObject.data[i] = globalDataObject.data[i-1]
+            }
+            globalDataObject.data[twoPointerData[0]] = tmp
+            globalDataObject.data[twoPointerData[0]].color = globalDataObject.baseColor
+            shiftCount += 1
+            
+            twoPointerData[3] += 1
+            mergeSwap = false
+        } else if (twoPointerData[0] > twoPointerData[2] + shiftCount || twoPointerData[3] > twoPointerData[5]) {
+            shiftCount = 0
+            interStack.push([twoPointerData[2]-twoPointerData[1]+1, twoPointerData[1]+ twoPointerData[4], twoPointerData[5]])
+            for (let i = 0; i < twoPointerData[1]+twoPointerData[4]; i++) {
+                globalDataObject.data[i+twoPointerData[2]-twoPointerData[1]+1].color = globalDataObject.baseColor
+            }
+            console.log(twoPointerData[1]+twoPointerData[4])
+            globalDataObject.data[twoPointerData[1]+twoPointerData[4]+twoPointerData[2]-twoPointerData[1]].color = "green"
+            twoPointerData = null
+        } else if (globalDataObject.data[twoPointerData[0]].value <= globalDataObject.data[twoPointerData[3]].value) {
+            twoPointerData[0] += 1
+            if (twoPointerData[0] <= twoPointerData[2]+shiftCount) {
+                globalDataObject.data[twoPointerData[0]-1].color = globalDataObject.baseColor
+                globalDataObject.data[twoPointerData[0]].color = globalDataObject.highLightColor
+            }
+        } else {
+            globalDataObject.data[twoPointerData[3]].color = "yellow"
+            if (twoPointerData[3]+1 <= twoPointerData[5]) {
+                globalDataObject.data[twoPointerData[3]+1].color = globalDataObject.highLightColor
+            }
+            mergeSwap = true
+        }
+    }
+
+    else if (mergeStack.length > 1) {
+        const leftData = mergeStack.pop(0)
+        const rightData = mergeStack.pop(0)
+        twoPointerData = [rightData[0], rightData[1],rightData[0]+rightData[1]-1, leftData[0], leftData[1], leftData[0]+leftData[1]-1]
+        globalDataObject.data[leftData[0]].color = globalDataObject.highLightColor
+        globalDataObject.data[rightData[0]].color = globalDataObject.highLightColor
+    }
+    else if ((mergeStack.length === 1 || mergeStack.length === 0) && (interStack.length + mergeStack.length  > 1)) {
+        if (mergeStack.length === 1) {
+            interStack.push(mergeStack.pop());
+        }
+        while (interStack.length > 0) {
+            mergeStack.push(interStack.pop());
+        }
+        mergeStackCompleted = true;
+    
+    } else {
+        globalDataObject.step = 0
+        mergeStackCompleted = false
+        globalDataObject.sorted = true
+        
+        sortedAnimation()
+    }
+}
+
+function sortStep() {
+    const currStep = globalDataObject.step
+    if (globalDataObject.sorted) {
+        sortedUpdateButton()
+        return 
+    }
+
+    if (mergeStackCompleted) {
+        mergeStackStep()
+
+    } else if (firstStep) {
+        firstStep = false
+        numberOfSteps += 1
+        globalDataObject.step += 1
+        globalDataObject.data[currStep+1].color = globalDataObject.highLightColor
+
+    } else if (currStep < globalDataObject.data.length - 1) {
+
+        if (globalDataObject.data[currStep].value > globalDataObject.data[currStep+1].value) {
+            globalDataObject.data[currStep].color = "green"
+            globalDataObject.data[currStep+1].color = "yellow"
+            mergeStack.push([currStep-numberOfSteps+1, numberOfSteps])
+            numberOfSteps = 1
+            globalDataObject.step += 1
+
+        } else {
+            globalDataObject.data[currStep].color = globalDataObject.baseColor
+            globalDataObject.data[currStep+1].color = globalDataObject.highLightColor
+            globalDataObject.step += 1
+            numberOfSteps += 1
+        }
+    } else {
+        if (currStep < globalDataObject.data.length) {
+            globalDataObject.data[currStep].color = "green"
+        }
+        mergeStack.push([currStep-numberOfSteps+1, numberOfSteps])
+        mergeStackCompleted = true
+    }
+
+    updateRender();
+}
 
 function startRun(){
     document.getElementById("nextButton").className = "disabled";
@@ -183,10 +256,10 @@ function startRun(){
         sortStep();
         if (globalDataObject.sorted) {
             clearInterval(timer);
+            sortedUpdateButton()
         }
     }, freeRunTime)
 }
-
 
 function pauseRun() {
     clearInterval(timer);
@@ -200,25 +273,35 @@ function sortedUpdateButton() {
     document.getElementById("pauseButton").className = "disabled";
 }
 
+function initalizeVar () {
+    timer = null
+    shiftCount = 0
+    needSwap = false
+    mergeStack = []
+    interStack = []
+    mergeSwap = false
+    firstStep = true
+    numberOfSteps = 0
+    twoPointerData = null
+    animationCompleted = false
+    mergeStackCompleted = false
+}
+
+
 
 function reset() {
     clearInterval(timer);
     d3.select("svg").remove()
-    
+
     document.getElementById("playButton").className = "button";
     document.getElementById("pauseButton").className = "button";
     document.getElementById("nextButton").className = "button";
 
     document.getElementById("main").style.display = "none";
     document.getElementById('userInput').style.display = "block"
+    document.getElementById("smallInputWarning").style.display = "none"
     document.getElementById('invalidInputWarning').style.display = "none"
 
-}
-
-function initalizeVar() {
-    timer = null
-    needSwap = false
-    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 }
 
 function validateData(userInput) {
@@ -238,24 +321,23 @@ function validateData(userInput) {
     }
 }
 
-
 function convertData(userInput) {
     return  userInput.split(',').map(element => {
         return Number(element);
     })
 }
 
-
 tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
-    initalizeVar();
+    initalizeVar()
     const userInput = document.getElementById('listDataInput').value
     if (!validateData(userInput)) {
         document.getElementById('invalidInputWarning').style.display = "block"
     } 
     else if (convertData(userInput).length < 2) {
         document.getElementById("smallInputWarning").style.display = "block"
-    } else {
+    }
+    else {
         const unsortedInputData = convertData(userInput)
         const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
         document.getElementById("main").style.display = "block"
@@ -263,6 +345,6 @@ function renderGraphFromUserInput() {
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
 
-        return createGraph(unsortedInputData, "insertSortChart", "steelblue", "red");
+        return createGraph(unsortedInputData, "naturalMergeSortChart", "steelblue", "red");
     }
 }

@@ -222,13 +222,18 @@ function sortedUpdateButton() {
 }
 
 
+function initalizeVar() {
+    needSwap = false
+    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+}
+
 function reset() {
     clearInterval(timer);
     d3.select("svg").remove()
-    
+
+    document.getElementById("nextButton").className = "button";
     document.getElementById("playButton").className = "button";
     document.getElementById("pauseButton").className = "button";
-    document.getElementById("nextButton").className = "button";
 
     document.getElementById("main").style.display = "none";
     document.getElementById('userInput').style.display = "block"
@@ -239,8 +244,14 @@ function reset() {
 
 tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
+    initalizeVar()
     const userInput = document.getElementById('listDataInput').value
-    if (validateData(userInput)) {
+    if (!validateData(userInput)) {
+        document.getElementById('invalidInputWarning').style.display = "block"
+    } 
+    else if (convertData(userInput).length < 2) {
+        document.getElementById("smallInputWarning").style.display = "block"
+    } else {
         const unsortedInputData = convertData(userInput)
         const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
         document.getElementById("main").style.display = "block"
@@ -248,8 +259,6 @@ function renderGraphFromUserInput() {
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
 
-        return createGraph(unsortedInputData, "bubbleSortChar", "steelblue", "red");
-    } else {
-        document.getElementById('invalidInputWarning').style.display = "block"
+        return createGraph(unsortedInputData, "bubbleSortChart", "steelblue", "red");
     }
 }
