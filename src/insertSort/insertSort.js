@@ -1,8 +1,8 @@
 const transitionTime = 250
 const freeRunTime = transitionTime + 100
-var timer;
-var needSwap;
-var globalDataObject;
+var timer = null
+var needSwap = false
+var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 
 function ArrayToChartData (nums, color) {
     let data = []
@@ -215,27 +215,12 @@ function reset() {
 
 }
 
-function initalizeVar() {
-    timer = null
-    needSwap = false
-    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
-}
 
 function validateData(userInput) {
     if (userInput.length === 0) {
         return false
     } 
-    else if(!(/ ?([0-9]* ?,)/.test(userInput))){
-        return false
-    } else {
-        const data = convertData(userInput)
-        for (let val of data) {
-            if (data === undefined) {
-                return false
-            }
-            return true
-        }
-    }
+    return / ?([0-9]* ?,)/.test(userInput)
 }
 
 
@@ -248,14 +233,8 @@ function convertData(userInput) {
 
 tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
-    initalizeVar();
     const userInput = document.getElementById('listDataInput').value
-    if (!validateData(userInput)) {
-        document.getElementById('invalidInputWarning').style.display = "block"
-    } 
-    else if (convertData(userInput).length < 2) {
-        document.getElementById("smallInputWarning").style.display = "block"
-    } else {
+    if (validateData(userInput)) {
         const unsortedInputData = convertData(userInput)
         const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
         document.getElementById("main").style.display = "block"
@@ -264,5 +243,8 @@ function renderGraphFromUserInput() {
         document.getElementById('userInput').style.display = "none"
 
         return createGraph(unsortedInputData, "insertSortChart", "steelblue", "red");
+    } else {
+        document.getElementById('invalidInputWarning').style.display = "block"
     }
 }
+

@@ -1,1 +1,55 @@
-@import "../../index.css";
+
+#listDataInput {
+    width: 1000px; 
+    font-size: 16pt; 
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.disabled {
+    opacity: 0.1;
+    cursor: not-allowed;
+}
+
+#listSubmitData {
+    background-color: lightgreen;
+}
+
+#listSubmitData:hover {
+    background-color: darkgreen;
+}
+
+
+#resetButton {
+    background-color: lightcoral;
+}
+
+#resetButton:hover {
+    background-color: darkred;
+}
+
+#nextButton {
+    background-color: lightgreen;
+}
+
+
+#nextButton:hover {
+    background-color: darkgreen;
+}
+
+
+#pauseButton {
+    background-color: lightsalmon;
+}
+
+
+#pauseButton:hover {
+    background-color: salmon;
+}
