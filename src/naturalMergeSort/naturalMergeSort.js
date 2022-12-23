@@ -1,7 +1,8 @@
-const transitionTime = 250
-const freeRunTime = transitionTime + 100
+var transitionTime;
+var freeRunTime;
 
 var timer;
+var paused;
 var shiftCount;
 var needSwap;
 var mergeSwap;
@@ -144,7 +145,7 @@ function sortedAnimation() {
 
 function mergeStackStep() {
     if (twoPointerData) {
-        console.log("current right pointer: ", twoPointerData[0], " curr left pointer : ", twoPointerData[3]);
+        // console.log("current right pointer: ", twoPointerData[0], " curr left pointer : ", twoPointerData[3]);
         if (mergeSwap) {
             const tmp = globalDataObject.data[twoPointerData[3]]
             for (let i = twoPointerData[3]; i > twoPointerData[0]; i--) {
@@ -162,7 +163,6 @@ function mergeStackStep() {
             for (let i = 0; i < twoPointerData[1]+twoPointerData[4]; i++) {
                 globalDataObject.data[i+twoPointerData[2]-twoPointerData[1]+1].color = globalDataObject.baseColor
             }
-            console.log(twoPointerData[1]+twoPointerData[4])
             globalDataObject.data[twoPointerData[1]+twoPointerData[4]+twoPointerData[2]-twoPointerData[1]].color = "green"
             twoPointerData = null
         } else if (globalDataObject.data[twoPointerData[0]].value <= globalDataObject.data[twoPointerData[3]].value) {
@@ -247,7 +247,7 @@ function sortStep() {
     updateRender();
 }
 
-function startRun(){
+function playSort(){
     document.getElementById("nextButton").className = "disabled";
     if (globalDataObject.sorted) {
         return 
@@ -256,9 +256,25 @@ function startRun(){
         sortStep();
         if (globalDataObject.sorted) {
             clearInterval(timer);
-            sortedUpdateButton()
         }
     }, freeRunTime)
+}
+
+
+function togglePlay() {
+    if (!paused) {
+        paused = true;
+        clearInterval(timer);
+        document.getElementById("nextButton").className = "button";
+        document.getElementById("playPauseButton").innerHTML = "Play"
+        document.getElementById("playPauseButton").className = "playButton"
+    } else {
+        playSort()
+        paused = false
+        document.getElementById("nextButton").className = "disabled";
+        document.getElementById("playPauseButton").innerHTML = "Pause"
+        document.getElementById("playPauseButton").className = "pauseButton"
+    }
 }
 
 function pauseRun() {
@@ -269,12 +285,36 @@ function pauseRun() {
 
 function sortedUpdateButton() {
     document.getElementById("nextButton").className = "disabled";
-    document.getElementById("playButton").className = "disabled";
-    document.getElementById("pauseButton").className = "disabled";
+    document.getElementById("playPauseButton").className = "disabled";
+}
+
+function updateSpeed() {
+    var val = document.getElementById("playSpeed").value
+    transitionTime = Math.ceil(1000/(val*val))
+    freeRunTime = transitionTime*1.2
+
+    if (!paused) {
+        clearInterval(timer);
+        playSort()
+    }
+}
+
+function reset() {
+    paused = true
+    clearInterval(timer);
+    d3.select("svg").remove()
+    document.getElementById("nextButton").className = "button";
+    document.getElementById("playPauseButton").innerHTML = "Play"
+    document.getElementById("playPauseButton").className = "playButton"
+
+    document.getElementById("main").style.display = "none";
+    document.getElementById('userInput').style.display = "block"
+    document.getElementById('invalidInputWarning').style.display = "none"
 }
 
 function initalizeVar () {
     timer = null
+    paused = true
     shiftCount = 0
     needSwap = false
     mergeStack = []
@@ -285,23 +325,9 @@ function initalizeVar () {
     twoPointerData = null
     animationCompleted = false
     mergeStackCompleted = false
-}
 
-
-
-function reset() {
-    clearInterval(timer);
-    d3.select("svg").remove()
-
-    document.getElementById("playButton").className = "button";
-    document.getElementById("pauseButton").className = "button";
-    document.getElementById("nextButton").className = "button";
-
-    document.getElementById("main").style.display = "none";
-    document.getElementById('userInput').style.display = "block"
-    document.getElementById("smallInputWarning").style.display = "none"
-    document.getElementById('invalidInputWarning').style.display = "none"
-
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
 }
 
 function validateData(userInput) {
@@ -327,14 +353,14 @@ function convertData(userInput) {
     })
 }
 
-tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
+// base_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
     initalizeVar()
     const userInput = document.getElementById('listDataInput').value
     if (!validateData(userInput)) {
         document.getElementById('invalidInputWarning').style.display = "block"
     } 
-    else if (convertData(userInput).length < 2) {
+    else if (convertData(userInput).length < 3) {
         document.getElementById("smallInputWarning").style.display = "block"
     }
     else {
