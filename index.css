@@ -92,3 +92,18 @@ button {
 #pauseButton:hover {
     background-color: salmon;
 }
+
+.playButton {
+    background-color: aliceblue;
+}
+.playButton:hover {
+    background-color: antiquewhite;
+}
+
+.pauseButton {
+    background-color: lightsalmon;
+}
+
+.pauseButton:hover {
+    background-color: salmon;
+}

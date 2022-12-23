@@ -1,7 +1,8 @@
-const transitionTime = 250
-const freeRunTime = transitionTime + 100
+var transitionTime;
+var freeRunTime;
 
 var timer;
+var paused;
 var stepSize;
 var shiftCount;
 var needSwap;
@@ -282,7 +283,7 @@ function sortStep() {
     updateRender();
 }
 
-function startRun(){
+function playSort() {
     document.getElementById("nextButton").className = "disabled";
     if (globalDataObject.sorted) {
         return 
@@ -296,20 +297,44 @@ function startRun(){
     }, freeRunTime)
 }
 
-function pauseRun() {
-    clearInterval(timer);
-    document.getElementById("nextButton").className = "button";
+function togglePlay() {
+    if (!paused) {
+        paused = true;
+        clearInterval(timer);
+        document.getElementById("nextButton").className = "button";
+        document.getElementById("playPauseButton").innerHTML = "Play"
+        document.getElementById("playPauseButton").className = "playButton"
+    } else {
+        playSort()
+        paused = false
+        document.getElementById("nextButton").className = "disabled";
+        document.getElementById("playPauseButton").innerHTML = "Pause"
+        document.getElementById("playPauseButton").className = "pauseButton"
+    }
+}
 
+function updateSpeed() {
+    var val = document.getElementById("playSpeed").value
+    transitionTime = Math.ceil(1000/(val*val))
+    freeRunTime = transitionTime*1.2
+
+    if (!paused) {
+        clearInterval(timer);
+        playSort()
+    }
 }
 
 function sortedUpdateButton() {
     document.getElementById("nextButton").className = "disabled";
-    document.getElementById("playButton").className = "disabled";
-    document.getElementById("pauseButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play"
+    document.getElementById("playPauseButton").className = "disabled";
 }
+
+
 
 function initalizeVar () {
     timer = null
+    paused = true
     stepSize = 2
     shiftCount = 0
     needSwap = false
@@ -321,6 +346,9 @@ function initalizeVar () {
     twoPointerData = null
     animationCompleted = false
     mergeStackCompleted = false
+
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
 }
 
 
@@ -329,9 +357,9 @@ function reset() {
     clearInterval(timer);
     d3.select("svg").remove()
 
-    document.getElementById("playButton").className = "button";
-    document.getElementById("pauseButton").className = "button";
     document.getElementById("nextButton").className = "button";
+    document.getElementById("playPauseButton").innerHTML = "Play"
+    document.getElementById("playPauseButton").className = "button";
 
     document.getElementById("main").style.display = "none";
     document.getElementById('userInput').style.display = "block"
@@ -370,7 +398,7 @@ function renderGraphFromUserInput() {
     if (!validateData(userInput)) {
         document.getElementById('invalidInputWarning').style.display = "block"
     } 
-    else if (convertData(userInput).length < 2) {
+    else if (convertData(userInput).length < 3) {
         document.getElementById("smallInputWarning").style.display = "block"
     }
     else {

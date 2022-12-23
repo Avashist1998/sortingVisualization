@@ -29,8 +29,9 @@
                     <div id="navigationButton">
                         <button id="resetButton" type="button" onclick=reset()>Reset</button>
                         <button id="nextButton" type="button" onclick=sortStep()>Next</button>
-                        <button id="playButton" type="button" onclick=startRun()>Play</button>
-                        <button id="pauseButton" type="button" onclick=pauseRun()>Pause</button>
+                        <button id="playPauseButton" class="playButton" type="button" onclick=togglePlay()>Play</button>
+                        <label for="playSpeed">Speed: </label>
+                        <input type="range" min="1" max="9" value="1" step="1" class="slider" id="playSpeed" onchange=updateSpeed()>
                     </div>
                 </div>
                 <div id="informationBlock">
