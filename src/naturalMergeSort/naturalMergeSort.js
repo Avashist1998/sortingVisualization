@@ -200,15 +200,14 @@ function mergeStackStep() {
         globalDataObject.step = 0
         mergeStackCompleted = false
         globalDataObject.sorted = true
-        
         sortedAnimation()
+        sortedUpdateButton()
     }
 }
 
 function sortStep() {
     const currStep = globalDataObject.step
     if (globalDataObject.sorted) {
-        sortedUpdateButton()
         return 
     }
 
@@ -285,6 +284,7 @@ function pauseRun() {
 
 function sortedUpdateButton() {
     document.getElementById("nextButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play"
     document.getElementById("playPauseButton").className = "disabled";
 }
 
