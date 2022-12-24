@@ -228,6 +228,7 @@ function togglePlay() {
 
 function sortedUpdateButton() {
     document.getElementById("nextButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play";
     document.getElementById("playPauseButton").className = "disabled";
 }
 

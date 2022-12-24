@@ -221,15 +221,14 @@ function mergeStackStep() {
         globalDataObject.step = 0
         mergeStackCompleted = false
         globalDataObject.sorted = true
-        
         sortedAnimation()
+        sortedUpdateButton()
     }
 }
 
 function sortStep() {
     const currStep = globalDataObject.step
     if (globalDataObject.sorted) {
-        sortedUpdateButton()
         return 
     }
 
@@ -292,7 +291,6 @@ function playSort() {
         sortStep();
         if (globalDataObject.sorted) {
             clearInterval(timer);
-            sortedUpdateButton()
         }
     }, freeRunTime)
 }
