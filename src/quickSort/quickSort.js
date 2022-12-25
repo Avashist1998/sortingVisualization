@@ -1,13 +1,27 @@
 
 var timer;
 var paused;
+var currSort;
 var needSwap;
+var chartWidth;
+var chartHeight;
 var freeRunTime;
 var sortingStack;
 var transitionTime;
 var globalDataObject;
-var currSort;
 var needToSortStack;
+
+function initalizeVar() {
+    timer = null
+    paused = true
+    currSort = []
+    needSwap = 0
+    sortingStack = []
+    needToSortStack = []
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
+    globalDataObject = {id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+}
 
 function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.id = id
@@ -17,7 +31,6 @@ function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.sortedIndex = 0
     globalDataObject.highLightColor = highLightColor
     globalDataObject.data = arrayToChartData(numbers, baseColor);
-    // console.log(globalDataObject.data)
     createBarChar(globalDataObject.data, {
         x: data => data.init_index,
         y: data => data.value, 
@@ -92,9 +105,9 @@ function updateRender () {
 
     // Compute values.
     xPadding = 0.1
-    xRange = [40, 640], 
+    xRange = [40, chartWidth], 
     yType = d3.scaleLinear
-    yRange = [500 - 30, 20]
+    yRange = [chartHeight - 30, 20]
 
     X = d3.map(globalDataObject.data, data => data.init_index);
     Y = d3.map(globalDataObject.data, data => data.value);
@@ -119,20 +132,8 @@ function updateRender () {
     .style("fill", i => globalDataObject.data[i].color);
 }
 
-
-// Start the sort
-    // pop the stack 
-    // created your pointers
-// move the pointer 
-
-// add the sub sort to the stack
-    // make the split value as green
-    // add it to the stack
-
-
 function swap() {
     if (needSwap === 1) {
-        console.log("swap input: ", currSort)
         const tmp = globalDataObject.data[currSort[0]];
         globalDataObject.data[currSort[0]] = globalDataObject.data[currSort[1]-1];
         globalDataObject.data[currSort[1]-1] = globalDataObject.data[currSort[1]];
@@ -140,32 +141,26 @@ function swap() {
         needSwap += 1
     }
     else {
-        // color and value updated
         globalDataObject.data[currSort[0]].color = globalDataObject.baseColor
         globalDataObject.data[currSort[1]].color = globalDataObject.baseColor
         currSort[1] -= 1
         needSwap = 0
         globalDataObject.data[currSort[0]].color = globalDataObject.highLightColor
-        console.log("updated swap input: ", currSort)
     }
 }
 
 function sortStep() {
-    // console.log("this is the sort step");
     if (globalDataObject.sorted) {
         return
     }
 
     if (needSwap !== 0) {
         swap()
-    }
-    else if (currSort.length !== 0) {
-        console.log("the currSort value is ", currSort)
+
+    } else if (currSort.length !== 0) {
         if (currSort[0] >= currSort[1]) {
             globalDataObject.data[currSort[1]].color = "green"
-            // add the sub sorted list to the stack
             const rightSize = (currSort[3]-currSort[1])
-            console.log("right size: ", rightSize)
             if (rightSize > 1) {
                 needToSortStack.push([currSort[1]+1, currSort[3], currSort[1]+1, currSort[3], rightSize])
             } else {
@@ -175,18 +170,17 @@ function sortStep() {
                 }
             }
             const leftSize = (currSort[1]-currSort[2])
-            console.log("left size: ", leftSize)
             if (leftSize > 1) {
                 needToSortStack.push([currSort[2], currSort[1]-1, currSort[2], currSort[1]-1, leftSize])
             } else {
                 globalDataObject.data[currSort[1]-1].color = "green" 
             }
-            console.log(needToSortStack)
             currSort = []
-        }
-        else if (globalDataObject.data[currSort[0]].value > globalDataObject.data[currSort[1]].value) {
+
+        } else if (globalDataObject.data[currSort[0]].value > globalDataObject.data[currSort[1]].value) {
             needSwap = 1
             globalDataObject.data[currSort[1]-1].color = "yellow"
+
         } else {
             globalDataObject.data[currSort[0]].color = globalDataObject.baseColor
             currSort[0] += 1
@@ -194,17 +188,16 @@ function sortStep() {
         }
     }
     else {
+
         if (needToSortStack.length === 0) {
             globalDataObject.sorted = true
             sortedUpdateButton()
-        }
-        else {
-            // console.log(needToSortStack)
+
+        } else {
+
             const currArray = needToSortStack.pop()
             currSort =  [currArray[0], currArray[1], currArray[0], currArray[1], currArray[2]]
-            // console.log("currArray :", currArray)
-            // console.log("currSort: ", currSort)
-            globalDataObject.data[currSort[1]].color = "teal"
+            globalDataObject.data[currSort[1]].color = "blue"
             globalDataObject.data[currSort[0]].color = globalDataObject.highLightColor
         }
     }
@@ -228,12 +221,14 @@ function playSort(){
 
 function togglePlay() {
     if (!paused) {
+
         paused = true;
         clearInterval(timer);
         document.getElementById("nextButton").className = "button";
         document.getElementById("playPauseButton").innerHTML = "Play"
         document.getElementById("playPauseButton").className = "playButton"
     } else {
+
         playSort()
         paused = false
         document.getElementById("nextButton").className = "disabled";
@@ -277,19 +272,6 @@ function updateSpeed() {
         clearInterval(timer);
         playSort()
     }
-}
-
-function initalizeVar() {
-    timer = null
-    
-    paused = true
-    currSort = []
-    needSwap = 0
-    sortingStack = []
-    needToSortStack = []
-    transitionTime = 250
-    freeRunTime = transitionTime*1.2
-    globalDataObject = {id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 }
 
 function validateData(userInput) {
@@ -340,7 +322,8 @@ function renderGraphFromUserInput() {
         document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
-
-        return createGraph(unsortedInputData, "quickSortChart", "steelblue", "red");
+        chartHeight = 500;
+        chartWidth = document.getElementById("chartBlock").scrollWidth;
+        return createGraph(unsortedInputData, "quickSortChart", "steelblue", "red", chartHeight, chartWidth);
     }
 }
