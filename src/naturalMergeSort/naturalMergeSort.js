@@ -1,5 +1,7 @@
 var transitionTime;
 var freeRunTime;
+var chartWidth;
+var chartHeight;
 
 var timer;
 var paused;
@@ -14,9 +16,29 @@ var twoPointerData;
 var animationCompleted;
 var mergeStackCompleted;
 
-var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+var globalDataObject;
 
-function ArrayToChartData (nums, color) {
+function initalizeVar () {
+    timer = null
+    paused = true
+    shiftCount = 0
+    needSwap = false
+    mergeStack = []
+    interStack = []
+    mergeSwap = false
+    firstStep = true
+    numberOfSteps = 0
+    twoPointerData = null
+    animationCompleted = false
+    mergeStackCompleted = false
+
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
+    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+
+}
+
+function arrayToChartData (nums, color) {
     let data = []
     nums.map( (num, index) => {
         data.push({init_index: index, value: num, color: color});
@@ -31,7 +53,7 @@ function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.baseColor = baseColor
     globalDataObject.sortedIndex = 0
     globalDataObject.highLightColor = highLightColor
-    globalDataObject.data = ArrayToChartData(numbers, baseColor);
+    globalDataObject.data = arrayToChartData(numbers, baseColor);
     // console.log(globalDataObject.data)
     createBarChar(globalDataObject.data, {
         x: data => data.init_index,
@@ -107,9 +129,9 @@ function updateRender () {
 
     // Compute values.
     xPadding = 0.1
-    xRange = [40, 640], 
+    xRange = [40, chartWidth], 
     yType = d3.scaleLinear
-    yRange = [500 - 30, 20]
+    yRange = [chartHeight - 30, 20]
 
     X = d3.map(globalDataObject.data, data => data.init_index);
     Y = d3.map(globalDataObject.data, data => data.value);
@@ -312,23 +334,7 @@ function reset() {
     document.getElementById('invalidInputWarning').style.display = "none"
 }
 
-function initalizeVar () {
-    timer = null
-    paused = true
-    shiftCount = 0
-    needSwap = false
-    mergeStack = []
-    interStack = []
-    mergeSwap = false
-    firstStep = true
-    numberOfSteps = 0
-    twoPointerData = null
-    animationCompleted = false
-    mergeStackCompleted = false
 
-    transitionTime = 250
-    freeRunTime = transitionTime*1.2
-}
 
 function validateData(userInput) {
     if (userInput.length === 0) {
@@ -370,7 +376,8 @@ function renderGraphFromUserInput() {
         document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
-
-        return createGraph(unsortedInputData, "naturalMergeSortChart", "steelblue", "red");
+        chartHeight = 500;
+        chartWidth = document.getElementById("chartBlock").scrollWidth;
+        return createGraph(unsortedInputData, "naturalMergeSortChart", "steelblue", "red", chartHeight, chartWidth);
     }
 }

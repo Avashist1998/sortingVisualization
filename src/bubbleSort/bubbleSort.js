@@ -1,9 +1,21 @@
-var timer = null
+var timer;
+var paused;
+var needSwap;
+var chartHeight;
+var chartWidth;
 var freeRunTime;
-var paused = true
 var transitionTime;
-var needSwap = false
-var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+var globalDataObject;
+
+function initalizeVar() {
+    timer = null
+    paused = true
+    needSwap = false
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
+    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+}
+
 
 function ArrayToChartData (nums, color) {
     let data = []
@@ -13,7 +25,7 @@ function ArrayToChartData (nums, color) {
     return data;
 }
 
-function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
+function createGraph(numbers, id, baseColor, highLightColor, height, width){
     globalDataObject.id = id
     globalDataObject.step = 0
     globalDataObject.sorted = false
@@ -31,14 +43,12 @@ function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     })
 }
 
-
 function updateRender () {
 
-    // Compute values.
     xPadding = 0.1
-    xRange = [40, 640], 
+    xRange = [40, chartWidth], 
     yType = d3.scaleLinear
-    yRange = [500 - 30, 20]
+    yRange = [chartHeight - 30, 20]
 
     X = d3.map(globalDataObject.data, data => data.init_index);
     Y = d3.map(globalDataObject.data, data => data.value);
@@ -54,11 +64,11 @@ function updateRender () {
     // Construct scales, axes, and formats.
     const xScale = d3.scaleBand(xDomain, xRange).padding(xPadding);
     const yScale = yType(yDomain, yRange);
-    // console.log(X)
-    // console.log(Y)
+
     d3.selectAll("rect").transition().duration(transitionTime)
     .attr("x", i => xScale(X[i]))
     .attr("y", i => yScale(Y[i]))
+    .attr("width", xScale.bandwidth())
     .attr("height", i => yScale(0) - yScale(Y[i]))
     .style("fill", i => globalDataObject.data[i].color);
 
@@ -146,12 +156,6 @@ function createBarChar(data, {
     // Construct scales, axes, and formats.
     const xScale = d3.scaleBand(xDomain, xRange).padding(xPadding);
     const yScale = yType(yDomain, yRange);
-    // xScale = xScale;
-    // yScale = yScale;
-    // const xAxis = d3.axisBottom(xScale).tickSizeOuter(0);
-    // const yAxis = d3.axisLeft(yScale).ticks(height / 40, yFormat);
-
-    // console.log(height)
 
     const svg = d3.select("#"+ globalDataObject.id)
         .append("svg")
@@ -232,13 +236,7 @@ function sortedUpdateButton() {
     document.getElementById("playPauseButton").className = "disabled";
 }
 
-function initalizeVar() {
-    paused = true
-    needSwap = false
-    transitionTime = 250
-    freeRunTime = transitionTime*1.2
-    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
-}
+
 
 function reset() {
     clearInterval(timer);
@@ -266,10 +264,11 @@ function renderGraphFromUserInput() {
         const unsortedInputData = convertData(userInput)
         const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
         document.getElementById("main").style.display = "block"
+        document.getElementById('userInput').style.display = "none"
         document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
-        document.getElementById('userInput').style.display = "none"
-
-        return createGraph(unsortedInputData, "bubbleSortChart", "steelblue", "red");
+        chartHeight = 500;
+        chartWidth = document.getElementById("chartBlock").scrollWidth;
+        return createGraph(unsortedInputData, "bubbleSortChart", "steelblue", "red", chartHeight, chartWidth);
     }
 }
