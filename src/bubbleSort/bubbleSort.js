@@ -1,6 +1,7 @@
-const transitionTime = 250
-const freeRunTime = transitionTime + 100
 var timer = null
+var freeRunTime;
+var paused = true
+var transitionTime;
 var needSwap = false
 var globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
 
@@ -11,7 +12,6 @@ function ArrayToChartData (nums, color) {
     })
     return data;
 }
-
 
 function createGraph(numbers, id, baseColor, highLightColor, height=500, width){
     globalDataObject.id = id
@@ -111,12 +111,8 @@ function sortStep() {
     
         globalDataObject.step += 1    
     }
-    
-    console.log(globalDataObject.step, globalDataObject.sortedIndex, globalDataObject.data.length)
     updateRender();
-
 }
-
 
 function createBarChar(data, {
     x = (d, i) => i, // given d in data, returns the (ordinal) x-value
@@ -133,8 +129,7 @@ function createBarChar(data, {
     yDomain, // [ymin, ymax]
     yRange = [height - marginBottom, marginTop], // [bottom, top]
     xPadding = 0.1, // amount of x-range to reserve to separate bars
-} = {}) { 
-
+} = {}) {
 
     // Compute values.
     X = d3.map(data, x);
@@ -179,7 +174,6 @@ function createBarChar(data, {
     return svg.node();
 }
 
-
 function validateData(userInput) {
     if (userInput.length === 0) {
         return false
@@ -187,16 +181,13 @@ function validateData(userInput) {
     return / ?([0-9]* ?,)/.test(userInput)
 }
 
-
 function convertData(userInput) {
     return  userInput.split(',').map(element => {
         return Number(element);
     })
 }
 
-
-function startRun(){
-    document.getElementById("nextButton").className = "disabled";
+function playSort() {
     if (globalDataObject.sorted) {
         return 
     }
@@ -208,39 +199,70 @@ function startRun(){
     }, freeRunTime)
 }
 
+function updateSpeed() {
+    var val = document.getElementById("playSpeed").value
+    transitionTime = Math.ceil(1000/(val*val))
+    freeRunTime = transitionTime*1.2
 
-function pauseRun() {
-    clearInterval(timer);
-    document.getElementById("nextButton").className = "button";
+    if (!paused) {
+        clearInterval(timer);
+        playSort()
+    }
+}
 
+function togglePlay() {
+    if (!paused) {
+        paused = true;
+        clearInterval(timer);
+        document.getElementById("nextButton").className = "button";
+        document.getElementById("playPauseButton").innerHTML = "Play"
+        document.getElementById("playPauseButton").className = "playButton"
+    } else {
+        playSort()
+        paused = false
+        document.getElementById("nextButton").className = "disabled";
+        document.getElementById("playPauseButton").innerHTML = "Pause"
+        document.getElementById("playPauseButton").className = "pauseButton"
+    }
 }
 
 function sortedUpdateButton() {
     document.getElementById("nextButton").className = "disabled";
-    document.getElementById("playButton").className = "disabled";
-    document.getElementById("pauseButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play";
+    document.getElementById("playPauseButton").className = "disabled";
 }
 
+function initalizeVar() {
+    paused = true
+    needSwap = false
+    transitionTime = 250
+    freeRunTime = transitionTime*1.2
+    globalDataObject = { id: "", step: 0, sortedIndex: 0, data: [], sorted: false, baseColor: "", highLightColor: ""}
+}
 
 function reset() {
     clearInterval(timer);
     d3.select("svg").remove()
-    
-    document.getElementById("playButton").className = "button";
-    document.getElementById("pauseButton").className = "button";
+
     document.getElementById("nextButton").className = "button";
+    document.getElementById("playPauseButton").innerHTML = "Play"
+    document.getElementById("playPauseButton").className = "playButton"
 
     document.getElementById("main").style.display = "none";
     document.getElementById('userInput').style.display = "block"
     document.getElementById('invalidInputWarning').style.display = "none"
-
 }
 
-
-tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
+// base_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
+    initalizeVar()
     const userInput = document.getElementById('listDataInput').value
-    if (validateData(userInput)) {
+    if (!validateData(userInput)) {
+        document.getElementById('invalidInputWarning').style.display = "block"
+    } 
+    else if (convertData(userInput).length < 2) {
+        document.getElementById("smallInputWarning").style.display = "block"
+    } else {
         const unsortedInputData = convertData(userInput)
         const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
         document.getElementById("main").style.display = "block"
@@ -248,8 +270,6 @@ function renderGraphFromUserInput() {
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
 
-        return createGraph(unsortedInputData, "bubbleSortChar", "steelblue", "red");
-    } else {
-        document.getElementById('invalidInputWarning').style.display = "block"
+        return createGraph(unsortedInputData, "bubbleSortChart", "steelblue", "red");
     }
 }

@@ -3,7 +3,6 @@ var freeRunTime;
 
 var timer;
 var paused;
-var stepSize;
 var shiftCount;
 var needSwap;
 var mergeSwap;
@@ -135,25 +134,6 @@ function updateRender () {
     .style("fill", i => globalDataObject.data[i].color);
 }
 
-function swap() {
-    const currStep = globalDataObject.step
-    if (globalDataObject.data[currStep].value > globalDataObject.data[currStep+1].value) {
-        const tmp = globalDataObject.data[currStep];
-        const tmpCol = globalDataObject.data[currStep].color;
-        
-        // globalDataObject.data[currStep + 1].color = globalDataObject.data[currStep].color;
-        globalDataObject.data[currStep] = globalDataObject.data[currStep + 1];
-        
-        globalDataObject.data[currStep].color = "yellow";
-        globalDataObject.data[currStep + 1] = tmp;
-    } else {
-        globalDataObject.data[currStep].color = globalDataObject.baseColor
-        globalDataObject.step += 1
-        numberOfSteps += 1
-        needSwap = false
-    }
-}
-
 function sortedAnimation() {
     const currStep = globalDataObject.step
     for (let i = 0; i < globalDataObject.data.length; i++) {
@@ -165,7 +145,7 @@ function sortedAnimation() {
 
 function mergeStackStep() {
     if (twoPointerData) {
-        console.log("current right pointer: ", twoPointerData[0], " curr left pointer : ", twoPointerData[3]);
+        // console.log("current right pointer: ", twoPointerData[0], " curr left pointer : ", twoPointerData[3]);
         if (mergeSwap) {
             const tmp = globalDataObject.data[twoPointerData[3]]
             for (let i = twoPointerData[3]; i > twoPointerData[0]; i--) {
@@ -183,7 +163,6 @@ function mergeStackStep() {
             for (let i = 0; i < twoPointerData[1]+twoPointerData[4]; i++) {
                 globalDataObject.data[i+twoPointerData[2]-twoPointerData[1]+1].color = globalDataObject.baseColor
             }
-            console.log(twoPointerData[1]+twoPointerData[4])
             globalDataObject.data[twoPointerData[1]+twoPointerData[4]+twoPointerData[2]-twoPointerData[1]].color = "green"
             twoPointerData = null
         } else if (globalDataObject.data[twoPointerData[0]].value <= globalDataObject.data[twoPointerData[3]].value) {
@@ -241,27 +220,14 @@ function sortStep() {
         globalDataObject.step += 1
         globalDataObject.data[currStep+1].color = globalDataObject.highLightColor
 
-    } else if (numberOfSteps === stepSize) {
-        mergeStack.push([currStep-stepSize+1, stepSize])
-        globalDataObject.data[currStep].color = "green"
-        if (globalDataObject.step < globalDataObject.data.length-1) {
-            firstStep = true
-        }
-        
-        numberOfSteps = 0
-        if (currStep === globalDataObject.data.length) {
-            mergeStackCompleted = true
-        }
-
-    } else if (needSwap) {
-        swap()
-
     } else if (currStep < globalDataObject.data.length - 1) {
 
         if (globalDataObject.data[currStep].value > globalDataObject.data[currStep+1].value) {
-            globalDataObject.data[currStep].color = globalDataObject.highLightColor
+            globalDataObject.data[currStep].color = "green"
             globalDataObject.data[currStep+1].color = "yellow"
-            needSwap = true
+            mergeStack.push([currStep-numberOfSteps+1, numberOfSteps])
+            numberOfSteps = 1
+            globalDataObject.step += 1
 
         } else {
             globalDataObject.data[currStep].color = globalDataObject.baseColor
@@ -273,16 +239,14 @@ function sortStep() {
         if (currStep < globalDataObject.data.length) {
             globalDataObject.data[currStep].color = "green"
         }
-        if (globalDataObject.data.length%2 !== 0) {
-            mergeStack.push([currStep-numberOfSteps+1, numberOfSteps])
-        }
+        mergeStack.push([currStep-numberOfSteps+1, numberOfSteps])
         mergeStackCompleted = true
     }
 
     updateRender();
 }
 
-function playSort() {
+function playSort(){
     document.getElementById("nextButton").className = "disabled";
     if (globalDataObject.sorted) {
         return 
@@ -294,6 +258,7 @@ function playSort() {
         }
     }, freeRunTime)
 }
+
 
 function togglePlay() {
     if (!paused) {
@@ -311,6 +276,18 @@ function togglePlay() {
     }
 }
 
+function pauseRun() {
+    clearInterval(timer);
+    document.getElementById("nextButton").className = "button";
+
+}
+
+function sortedUpdateButton() {
+    document.getElementById("nextButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play"
+    document.getElementById("playPauseButton").className = "disabled";
+}
+
 function updateSpeed() {
     var val = document.getElementById("playSpeed").value
     transitionTime = Math.ceil(1000/(val*val))
@@ -322,18 +299,22 @@ function updateSpeed() {
     }
 }
 
-function sortedUpdateButton() {
-    document.getElementById("nextButton").className = "disabled";
+function reset() {
+    paused = true
+    clearInterval(timer);
+    d3.select("svg").remove()
+    document.getElementById("nextButton").className = "button";
     document.getElementById("playPauseButton").innerHTML = "Play"
-    document.getElementById("playPauseButton").className = "disabled";
+    document.getElementById("playPauseButton").className = "playButton"
+
+    document.getElementById("main").style.display = "none";
+    document.getElementById('userInput').style.display = "block"
+    document.getElementById('invalidInputWarning').style.display = "none"
 }
-
-
 
 function initalizeVar () {
     timer = null
     paused = true
-    stepSize = 2
     shiftCount = 0
     needSwap = false
     mergeStack = []
@@ -347,23 +328,6 @@ function initalizeVar () {
 
     transitionTime = 250
     freeRunTime = transitionTime*1.2
-}
-
-
-
-function reset() {
-    clearInterval(timer);
-    d3.select("svg").remove()
-
-    document.getElementById("nextButton").className = "button";
-    document.getElementById("playPauseButton").innerHTML = "Play"
-    document.getElementById("playPauseButton").className = "button";
-
-    document.getElementById("main").style.display = "none";
-    document.getElementById('userInput').style.display = "block"
-    document.getElementById("smallInputWarning").style.display = "none"
-    document.getElementById('invalidInputWarning').style.display = "none"
-
 }
 
 function validateData(userInput) {
@@ -389,7 +353,7 @@ function convertData(userInput) {
     })
 }
 
-tmp_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
+// base_input = "10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45"
 function renderGraphFromUserInput() {
     initalizeVar()
     const userInput = document.getElementById('listDataInput').value
@@ -407,6 +371,6 @@ function renderGraphFromUserInput() {
         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
         document.getElementById('userInput').style.display = "none"
 
-        return createGraph(unsortedInputData, "mergeSortChart", "steelblue", "red");
+        return createGraph(unsortedInputData, "naturalMergeSortChart", "steelblue", "red");
     }
 }

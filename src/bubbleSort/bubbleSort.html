@@ -16,6 +16,7 @@
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
                 <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Sort</button>
                 <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
+                <h3 id="smallInputWarning" style="color:orange;display: none;">Try data with more numbers</h3>
             </div>
             <div id="main" style="display: none;">
                 <div id="data">
@@ -25,12 +26,13 @@
                     <p1 id="sortedInputData"></p1>
                 </div>
                 <div id="chartBlock">
-                    <div id="bubbleSortChar"></div>
+                    <div id="bubbleSortChart"></div>
                     <div id="navigationButton">
                         <button id="resetButton" type="button" onclick=reset()>Reset</button>
                         <button id="nextButton" type="button" onclick=sortStep()>Next</button>
-                        <button id="playButton" type="button" onclick=startRun()>Play</button>
-                        <button id="pauseButton" type="button" onclick=pauseRun()>Pause</button>
+                        <button id="playPauseButton" class="playButton" type="button" onclick=togglePlay()>Play</button>
+                        <label for="playSpeed">Speed: </label>
+                        <input type="range" min="1" max="9" value="1" step="1" class="slider" id="playSpeed" onchange=updateSpeed()>
                     </div>
                 </div>
                 <div id="informationBlock">
@@ -64,9 +66,7 @@
                 </div>
             </div>
         </div>
-
         <script type="text/javascript" src="bubbleSort.js">
-
         </script>
 
     </body>

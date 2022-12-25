@@ -5,11 +5,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="insertSort.css">
+        <link rel="stylesheet" href="quickSort.css">
     </head>
     <body>
         <div> 
-            <h1 style="text-align: center;">Insert Sort</h1>
+            <h1 style="text-align: center;">Quick Sort</h1>
             <div id="userInput" style="text-align: center;">
                 <h3>Add your data below </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
@@ -25,7 +25,7 @@
                     <p1 id="sortedInputData"></p1>
                 </div>
                 <div id="chartBlock">
-                    <div id="insertSortChart"></div>
+                    <div id="quickSortChart"></div>
                     <div id="navigationButton">
                         <button id="resetButton" type="button" onclick=reset()>Reset</button>
                         <button id="nextButton" type="button" onclick=sortStep()>Next</button>
@@ -36,16 +36,34 @@
                 </div>
                 <div id="informationBlock">
                     <div id="codeBlock" style="text-align: center;">
-                        <h3>Insert Sort source code</h3>
+                        <h3>Quick Sort source code</h3>
                         <pre style="text-align: left;">
-                            def sort(arr: List[int]) -> List[int]: 
-                                for index in range(1, len(arr)):
-                                    current_val = arr[index]
-                                    j = index - 1
-                                        while (j >= 0 and current_val < arr[j]):
-                                            arr[j + 1] = arr[j]
-                                            j -= 1
-                                        arr[j + 1] = current_val
+                            def sort(arr: List[int]) -> List[int]:
+                                if len(arr) < 2:
+                                    return arr
+                                else:
+                                    pivot = len(arr) - 1
+                                    pivot_val = arr[pivot]
+                                    right, left, equal = [], [], 1
+                        
+                                    for i in range(pivot):
+                                        if arr[i] > pivot_val:
+                                            right.append(arr[i])
+                                        elif arr[i] < pivot_val:
+                                            left.append(arr[i])
+                                        else:
+                                            equal += 1
+                        
+                                    right, left = sort(right), sort(left)
+
+                                    for i, _ in enumerate(arr):
+                                        if len(left) != 0:
+                                            arr[i] = left.pop(0)
+                                        elif equal != 0:
+                                            arr[i] = pivot_val
+                                            equal -= 1
+                                        else:
+                                            arr[i] = right.pop(0)
                                 return arr
                         </pre>
                     </div>
@@ -56,8 +74,6 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="insertSort.js">
-        </script>
-
+        <script src="quickSort.js"></script>
     </body>
 </html>
