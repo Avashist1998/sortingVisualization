@@ -12,7 +12,7 @@
         <div style="text-align: center;"> 
             <h1>Bubble Sort</h1>
             <div id="userInput">
-                <h3 id="addData">Add your data below: </h3>
+                <h3 id="addData" style="width:50%">Add your data below: </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
                 <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Sort</button>
                 <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
@@ -21,9 +21,9 @@
             <div id="main" style="display: none;">
                 <div id="data">
                     <h3>Input Data</h3>
-                    <p1 id="inputData"></p1>
+                    <mark><p1 id="inputData"></p1></mark>
                     <h3>Sorted Data</h3>
-                    <p1 id="sortedInputData"></p1>
+                    <mark><p1 id="sortedInputData"></p1></mark>
                 </div>
                 <div id="chartBlock">
                     <div id="bubbleSortChart"></div>

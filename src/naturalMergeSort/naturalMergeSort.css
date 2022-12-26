@@ -1,4 +1,74 @@
 @import "../../index.css";
 
+/* added background color */
+html {
+    background-color: #a0c9a9;
+    background-size: 40px 40px;
+    background-image: radial-gradient(circle, #ffffff 1px, rgba(0, 0, 0, 0) 1px);
+}
 
+body {
+    margin-top:10%;
+    margin-left:5%;
+    margin-right:5%;
+    margin-bottom:10%;
+    border-radius: 25px;
+    border:8px outset #a0c9a9;
+    background-color: #e5ffe9;
+}
 
+#listDataInput {
+    /* Change search bar color */
+    background-color: #cfefd7;
+    color: #023020;
+    font-family: "Bubbly", sans-serif;
+}
+
+h1 {
+    color: #F53163;
+    font-family: "Bubbly", sans-serif;
+}
+
+h3 {
+    color: #023020;
+    font-family: "Bubbly", sans-serif;
+}
+#addData {
+    margin-left:-8%;
+}
+#Description {
+    font-family:"Lucida Console", "Courier New", monospace;
+    font-size:15px;
+    margin-bottom:50px;
+    margin-left:100px;
+    margin-right:200px;
+}
+mark {
+    background-color: #8cac93;
+    color: #023020; 
+}
+#inputData {
+    border-bottom: 5px solid #F3DDF2;
+    font-family:"Lucida Console", "Courier New", monospace;
+}
+
+#sortedInputData {
+    border-bottom: 5px solid #F3DDF2;
+    font-family:"Lucida Console", "Courier New", monospace;
+}
+
+#code{
+    border:color #fff5d7;
+    border:8px outset #836953;
+    background-color: #fff5d7;
+}
+
+#listSubmitData {
+    /* Change submit button color */
+    background-color: #C1E1C1;
+}
+
+#listSubmitData:hover {
+    /* Change submit button color */
+    background-color: #2F4C39;
+}

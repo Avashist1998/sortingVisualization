@@ -6,23 +6,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <link rel="stylesheet" href="naturalMergeSort.css">
+        <link href="https://fonts.cdnfonts.com/css/bubbly-2" rel="stylesheet">
     </head>
     <body>
         <div> 
             <h1 style="text-align: center;">Natural Merge Sort</h1>
             <div id="userInput" style="text-align: center;">
-                <h3>Add your data below </h3>
+                <h3 id="addData" style="width:50%">Add your data below: </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
-                <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Submit</button>
+                <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Sort</button>
                 <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
                 <h3 id="smallInputWarning" style="color:orange;display: none;">Try input with more numbers</h3>
             </div>
             <div id="main" style="display: none; text-align: center;">
                 <div id="data">
                     <h3>Input Data</h3>
-                    <p1 id="inputData"></p1>
+                    <mark><p1 id="inputData"></p1></mark>
                     <h3>Sorted Data</h3>
-                    <p1 id="sortedInputData"></p1>
+                    <mark><p1 id="sortedInputData"></p1></mark>
                 </div>
                 <div id="chartBlock">
                     <div id="naturalMergeSortChart"></div>
