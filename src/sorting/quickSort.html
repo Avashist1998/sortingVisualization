@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="quickSort.css">
+        <link rel="stylesheet" href="../css/quickSort.css">
     </head>
     <body>
         <div> 
@@ -13,7 +13,7 @@
             <div id="userInput" style="text-align: center;">
                 <h3>Add your data below </h3>
                 <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
-                <button id="listSubmitData" type="button"  onclick=renderGraphFromUserInput()>Submit</button>
+                <button id="listSubmitData" type="button"  onclick=createQuickSortGraph()>Submit</button>
                 <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
                 <h3 id="smallInputWarning" style="color:orange;display: none;">Try data with more numbers</h3>
             </div>
@@ -74,6 +74,50 @@
                 </div>
             </div>
         </div>
-        <script src="quickSort.js"></script>
+        <script type="text/javascript" src="../js/utils.js"></script>
+        <script type="text/javascript" src="../js/quickSort.js"></script>
+        <script>
+            var data;
+            function createQuickSortGraph() {
+                const userInput = document.getElementById('listDataInput').value
+                if (!validateData(userInput)) {
+                    document.getElementById('invalidInputWarning').style.display = "block"
+                } 
+                else if (convertData(userInput).length < 2) {
+                    document.getElementById("smallInputWarning").style.display = "block"
+                } else {
+                    const unsortedInputData = convertData(userInput)
+                    const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
+                    document.getElementById("main").style.display = "block"
+                    document.getElementById('userInput').style.display = "none"
+                    document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
+                    document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
+                    chartHeight = 500;
+                    chartWidth = document.getElementById("chartBlock").scrollWidth;
+                    data = initalizeQuickVar(unsortedInputData, "quickSortChart", "steelblue", "blue","red", "yellow", "green", chartHeight, chartWidth)
+                    createGraph(data);
+                }
+            }
+
+            function reset() {
+                resetQuickSortUI(data)
+            }
+
+            function togglePlay() {
+                toggleQuickPlay(data)
+            }
+            function sortStep () {
+                quickSortStep(data)
+                updateRender(data)
+                if (data.sorted) {
+                    data.sortedUpdateUI()
+                }
+            }
+            function updateSpeed() {
+                var val = document.getElementById("playSpeed").value
+                updateTimeSpeed(data, val)
+            }
+        </script>
+        </script>
     </body>
 </html>
