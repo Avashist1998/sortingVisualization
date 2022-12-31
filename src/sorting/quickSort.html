@@ -2,122 +2,127 @@
 
 <html>
     <head>
+        <title>Quick Sort</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <link rel="stylesheet" href="../css/quickSort.css">
     </head>
     <body>
-        <div> 
-            <h1 style="text-align: center;">Quick Sort</h1>
-            <div id="userInput" style="text-align: center;">
-                <h3 id="addData">Add your data below </h3>
-                <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
-                <button id="listSubmitData" type="button"  onclick=createQuickSortGraph()>Sort</button>
-                <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
-                <h3 id="smallInputWarning" style="color:orange;display: none;">Try data with more numbers</h3>
-            </div>
-            <div id="main" style="display: none; text-align: center;">
-                <div id="data">
-                    <h3>Input Data</h3>
-                    <p1 id="inputData"></p1>
-                    <h3>Sorted Data</h3>
-                    <p1 id="sortedInputData"></p1>
-                </div>
-                <div id="chartBlock">
-                    <div id="quickSortChart"></div>
-                    <div id="navigationButton">
-                        <button id="resetButton" type="button" onclick=reset()>Reset</button>
-                        <button id="nextButton" type="button" onclick=sortStep()>Next</button>
-                        <button id="playPauseButton" class="playButton" type="button" onclick=togglePlay()>Play</button>
-                        <label for="playSpeed">Speed: </label>
-                        <input type="range" min="1" max="9" value="1" step="1" class="slider" id="playSpeed" onchange=updateSpeed()>
-                    </div>
-                </div>
-                <div id="informationBlock">
-                    <div id="codeBlock" style="text-align: center;">
-                        <h3>Quick Sort source code</h3>
-                        <pre style="text-align: left;">
-                            def sort(arr: List[int]) -> List[int]:
-                                if len(arr) < 2:
-                                    return arr
-                                else:
-                                    pivot = len(arr) - 1
-                                    pivot_val = arr[pivot]
-                                    right, left, equal = [], [], 1
-                        
-                                    for i in range(pivot):
-                                        if arr[i] > pivot_val:
-                                            right.append(arr[i])
-                                        elif arr[i] < pivot_val:
-                                            left.append(arr[i])
-                                        else:
-                                            equal += 1
-                        
-                                    right, left = sort(right), sort(left)
-
-                                    for i, _ in enumerate(arr):
-                                        if len(left) != 0:
-                                            arr[i] = left.pop(0)
-                                        elif equal != 0:
-                                            arr[i] = pivot_val
-                                            equal -= 1
-                                        else:
-                                            arr[i] = right.pop(0)
-                                return arr
-                        </pre>
-                    </div>
-                    <div id="backgroundInfo">
-                        <p id="wikiBlock"></p>
-                        <p id="spaceTimeComplexty"></p>
-                    </div>
-                </div>
-            </div>
+        <div class="topnav">
+            <a class="active" href="../../index.html">Home</a>
         </div>
-        <script type="text/javascript" src="../js/utils.js"></script>
-        <script type="text/javascript" src="../js/quickSort.js"></script>
-        <script>
-            var data;
-            function createQuickSortGraph() {
-                const userInput = document.getElementById('listDataInput').value
-                if (!validateData(userInput)) {
-                    document.getElementById('invalidInputWarning').style.display = "block"
-                } 
-                else if (convertData(userInput).length < 2) {
-                    document.getElementById("smallInputWarning").style.display = "block"
-                } else {
-                    const unsortedInputData = convertData(userInput)
-                    const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
-                    document.getElementById("main").style.display = "block"
-                    document.getElementById('userInput').style.display = "none"
-                    document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
-                    document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
-                    chartHeight = 500;
-                    chartWidth = document.getElementById("chartBlock").scrollWidth;
-                    data = initalizeQuickVar(unsortedInputData, "quickSortChart", "steelblue", "blue","red", "yellow", "green", chartHeight, chartWidth)
-                    createGraph(data);
-                }
-            }
+        <div class="content">
+            <div> 
+                <h1 style="text-align: center;">Quick Sort</h1>
+                <div id="userInput" style="text-align: center;">
+                    <h3 id="addData">Add your data below </h3>
+                    <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
+                    <button id="listSubmitData" type="button"  onclick=createQuickSortGraph()>Sort</button>
+                    <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
+                    <h3 id="smallInputWarning" style="color:orange;display: none;">Try data with more numbers</h3>
+                </div>
+                <div id="main" style="display: none; text-align: center;">
+                    <div id="data">
+                        <h3>Input Data</h3>
+                        <p1 id="inputData"></p1>
+                        <h3>Sorted Data</h3>
+                        <p1 id="sortedInputData"></p1>
+                    </div>
+                    <div id="chartBlock">
+                        <div id="quickSortChart"></div>
+                        <div id="navigationButton">
+                            <button id="resetButton" type="button" onclick=reset()>Reset</button>
+                            <button id="nextButton" type="button" onclick=sortStep()>Next</button>
+                            <button id="playPauseButton" class="playButton" type="button" onclick=togglePlay()>Play</button>
+                            <label for="playSpeed">Speed: </label>
+                            <input type="range" min="1" max="9" value="1" step="1" class="slider" id="playSpeed" onchange=updateSpeed()>
+                        </div>
+                    </div>
+                    <div id="informationBlock">
+                        <div id="codeBlock" style="text-align: center;">
+                            <h3>Quick Sort source code</h3>
+                            <pre style="text-align: left;">
+                                def sort(arr: List[int]) -> List[int]:
+                                    if len(arr) < 2:
+                                        return arr
+                                    else:
+                                        pivot = len(arr) - 1
+                                        pivot_val = arr[pivot]
+                                        right, left, equal = [], [], 1
+                            
+                                        for i in range(pivot):
+                                            if arr[i] > pivot_val:
+                                                right.append(arr[i])
+                                            elif arr[i] < pivot_val:
+                                                left.append(arr[i])
+                                            else:
+                                                equal += 1
+                            
+                                        right, left = sort(right), sort(left)
 
-            function reset() {
-                resetQuickSortUI(data)
-            }
-
-            function togglePlay() {
-                toggleQuickPlay(data)
-            }
-            function sortStep () {
-                quickSortStep(data)
-                updateRender(data)
-                if (data.sorted) {
-                    data.sortedUpdateUI()
+                                        for i, _ in enumerate(arr):
+                                            if len(left) != 0:
+                                                arr[i] = left.pop(0)
+                                            elif equal != 0:
+                                                arr[i] = pivot_val
+                                                equal -= 1
+                                            else:
+                                                arr[i] = right.pop(0)
+                                    return arr
+                            </pre>
+                        </div>
+                        <div id="backgroundInfo">
+                            <p id="wikiBlock"></p>
+                            <p id="spaceTimeComplexty"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="../js/utils.js"></script>
+            <script type="text/javascript" src="../js/quickSort.js"></script>
+            <script>
+                var data;
+                function createQuickSortGraph() {
+                    const userInput = document.getElementById('listDataInput').value
+                    if (!validateData(userInput)) {
+                        document.getElementById('invalidInputWarning').style.display = "block"
+                    } 
+                    else if (convertData(userInput).length < 2) {
+                        document.getElementById("smallInputWarning").style.display = "block"
+                    } else {
+                        const unsortedInputData = convertData(userInput)
+                        const sortedInputData = convertData(userInput).sort(function(a, b) { return a - b;});
+                        document.getElementById("main").style.display = "block"
+                        document.getElementById('userInput').style.display = "none"
+                        document.getElementById("inputData").innerHTML = unsortedInputData.join(", ")
+                        document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
+                        chartHeight = 500;
+                        chartWidth = document.getElementById("chartBlock").scrollWidth;
+                        data = initalizeQuickVar(unsortedInputData, "quickSortChart", "steelblue", "blue","red", "yellow", "green", chartHeight, chartWidth)
+                        createGraph(data);
+                    }
                 }
-            }
-            function updateSpeed() {
-                var val = document.getElementById("playSpeed").value
-                updateTimeSpeed(data, val)
-            }
-        </script>
-        </script>
+
+                function reset() {
+                    resetQuickSortUI(data)
+                }
+
+                function togglePlay() {
+                    toggleQuickPlay(data)
+                }
+                function sortStep () {
+                    quickSortStep(data)
+                    updateRender(data)
+                    if (data.sorted) {
+                        data.sortedUpdateUI()
+                    }
+                }
+                function updateSpeed() {
+                    var val = document.getElementById("playSpeed").value
+                    updateTimeSpeed(data, val)
+                }
+            </script>
+        </div>
     </body>
 </html>

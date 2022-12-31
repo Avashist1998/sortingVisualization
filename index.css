@@ -3,9 +3,18 @@ a:visited {
     color: teal
 }
 
-a:hover { text-decoration: none; color:yellow; }
-a:focus { text-decoration: none; color:orange; }
-a:active { text-decoration: none; color:teal; }
+a:hover { text-decoration: none; /*color:yellow;*/ }
+a:focus { text-decoration: none; /*color:orange;*/ }
+a:active { text-decoration: none; /*color:teal;*/ }
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+
+h2 {
+    text-align:left;
+    margin-left:5%;
+    font-size:35px;
+    color: #023020;
+}
 
 h1 {
     font-size: 72px;
@@ -114,8 +123,21 @@ html {
     background-size: 40px 40px;
     background-image: radial-gradient(circle, #ffffff 1px, rgba(0, 0, 0, 0) 1px);
 }
-
-body {
+.topnav {
+    overflow: hidden;
+    background-color: #a0c9a9;
+  }
+  
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 10px 10px;
+    text-decoration: none;
+    font-size: 23px;
+    font-family:"Lucida Console", "Courier New", monospace;
+  }
+.content {
     margin: 10% 5% 10% 5%; /* margin: top right bottom left */
     border-radius: 25px;
     border:8px outset #a0c9a9;
