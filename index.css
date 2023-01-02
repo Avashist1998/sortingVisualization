@@ -125,7 +125,10 @@ html {
 }
 .topnav {
     overflow: hidden;
-    background-color: #a0c9a9;
+    background-color: #B4D3B2;
+    margin-right:93%;
+    border:2px solid #f2f2f2;
+    border-radius:8px;
   }
   
 .topnav a {
@@ -134,8 +137,8 @@ html {
     text-align: center;
     padding: 10px 10px;
     text-decoration: none;
-    font-size: 23px;
-    font-family:"Lucida Console", "Courier New", monospace;
+    font-size: 25px;
+    font-family:"Bubbly", sans-serif;
   }
 .content {
     margin: 10% 5% 10% 5%; /* margin: top right bottom left */
