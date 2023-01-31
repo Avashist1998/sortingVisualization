@@ -2,27 +2,28 @@
 
 <html>
     <head>
-        <title>Quick Sort</title>
+        <title>Bubble Sort</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="../css/quickSort.css">
+        <link rel="stylesheet" href="../src/css/bubbleSort.css">
+        <link href="https://fonts.cdnfonts.com/css/bubbly-2" rel="stylesheet">
     </head>
     <body>
         <div class="topnav">
-            <a class="active" href="../../index.html">Home</a>
+            <a class="active" href="index.html">Home</a>
         </div>
         <div class="content">
-            <div> 
-                <h1 style="text-align: center;">Quick Sort</h1>
-                <div id="userInput" style="text-align: center;">
-                    <h3 id="addData">Add your data below </h3>
+            <div style="text-align: center;"> 
+                <h1>Bubble Sort</h1>
+                <div id="userInput">
+                    <h3 id="addData">Add your data below: </h3>
                     <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
-                    <button id="listSubmitData" type="button"  onclick=createQuickSortGraph()>Sort</button>
+                    <button id="listSubmitData" type="button"  onclick=createBubbleSortGraph()>Sort</button>
                     <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
                     <h3 id="smallInputWarning" style="color:orange;display: none;">Try data with more numbers</h3>
                 </div>
-                <div id="main" style="display: none; text-align: center;">
+                <div id="main" style="display: none;">
                     <div id="data">
                         <h3>Input Data</h3>
                         <p1 id="inputData"></p1>
@@ -30,7 +31,7 @@
                         <p1 id="sortedInputData"></p1>
                     </div>
                     <div id="chartBlock">
-                        <div id="quickSortChart"></div>
+                        <div id="bubbleSortChart"></div>
                         <div id="navigationButton">
                             <button id="resetButton" type="button" onclick=reset()>Reset</button>
                             <button id="nextButton" type="button" onclick=sortStep()>Next</button>
@@ -40,50 +41,43 @@
                         </div>
                     </div>
                     <div id="informationBlock">
-                        <div id="codeBlock" style="text-align: center;">
-                            <h3>Quick Sort source code</h3>
+                        <div id="codeBlock">
+                            <h3>Bubble Sort source code</h3>
+                            <h3 id="addData">Source Code:</h3>
                             <pre style="text-align: left;">
-                                def sort(arr: List[int]) -> List[int]:
-                                    if len(arr) < 2:
-                                        return arr
-                                    else:
-                                        pivot = len(arr) - 1
-                                        pivot_val = arr[pivot]
-                                        right, left, equal = [], [], 1
-                            
-                                        for i in range(pivot):
-                                            if arr[i] > pivot_val:
-                                                right.append(arr[i])
-                                            elif arr[i] < pivot_val:
-                                                left.append(arr[i])
-                                            else:
-                                                equal += 1
-                            
-                                        right, left = sort(right), sort(left)
-
-                                        for i, _ in enumerate(arr):
-                                            if len(left) != 0:
-                                                arr[i] = left.pop(0)
-                                            elif equal != 0:
-                                                arr[i] = pivot_val
-                                                equal -= 1
-                                            else:
-                                                arr[i] = right.pop(0)
+                                def sort(arr: List[int]) -> List[int]: 
+                                    sorted_index = len(arr) - 1
+                                    while sorted_index != 0:
+                                        for i in range(1, sorted_index + 1):
+                                            if arr[i - 1] > arr[i]:
+                                                arr[i], arr[i - 1] = arr[i - 1], arr[i]
+                                        sorted_index -= 1
                                     return arr
                             </pre>
                         </div>
                         <div id="backgroundInfo">
-                            <p id="wikiBlock"></p>
-                            <p id="spaceTimeComplexty"></p>
+                            <div id="wikiBlock">
+                                <h3>Information:</h3>
+                                <h6 id="Description">
+                                    Bubble Sort is known as the simplest sorting algorithm. 
+                                    It sorts by taking adjacent elements and switching their places if necessary. 
+                                    This alogirthm is not favorable for larger data sets and it doesn't recongize sorted sets. 
+                                
+                                </h6>
+                            </div>
+                            <div id="spaceTimeComplexty">
+                                <h3>Complexity:</h3>
+                                <h6 id="Description">The space complexity is O(1), the best case time complexity is O(N) and the average/worst case time complexity is O(N^2).</h6>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script type="text/javascript" src="../js/utils.js"></script>
-            <script type="text/javascript" src="../js/quickSort.js"></script>
+            <script type="text/javascript" src="../src/js/utils.js"></script>
+            <script type="text/javascript" src="../src/js/bubbleSort.js"></script>
             <script>
                 var data;
-                function createQuickSortGraph() {
+                function createBubbleSortGraph() {
                     const userInput = document.getElementById('listDataInput').value
                     if (!validateData(userInput)) {
                         document.getElementById('invalidInputWarning').style.display = "block"
@@ -99,25 +93,27 @@
                         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
                         chartHeight = 500;
                         chartWidth = document.getElementById("chartBlock").scrollWidth;
-                        data = initalizeQuickVar(unsortedInputData, "quickSortChart", "steelblue", "blue","red", "yellow", "green", chartHeight, chartWidth)
+                        data = initalizeBubbleVar(unsortedInputData, "bubbleSortChart", "steelblue", "red", "yellow", "green", chartHeight, chartWidth)
                         createGraph(data);
                     }
                 }
 
                 function reset() {
-                    resetQuickSortUI(data)
+                    resetBubbleSortUI(data)
                 }
 
                 function togglePlay() {
-                    toggleQuickPlay(data)
+                    toggleBubblePlay(data)
                 }
+
                 function sortStep () {
-                    quickSortStep(data)
+                    bubbleSortStep(data)
                     updateRender(data)
                     if (data.sorted) {
                         data.sortedUpdateUI()
                     }
-                }
+                }   
+                
                 function updateSpeed() {
                     var val = document.getElementById("playSpeed").value
                     updateTimeSpeed(data, val)
