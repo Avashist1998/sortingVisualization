@@ -2,11 +2,11 @@
 
 <html>
     <head>
-        <title>Natural Merge Sort</title>
+        <title>Merge Sort</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="../src/css/naturalMergeSort.css">
+        <link rel="stylesheet" href="./css/mergeSort.css">
     </head>
     <body>
         <div class="topnav">
@@ -14,13 +14,14 @@
         </div>
         <div class="content">
             <div> 
-                <h1 style="text-align: center;">Natural Merge Sort</h1>
+                <h1 style="text-align: center;">Merge Sort</h1>
                 <div id="userInput" style="text-align: center;">
                     <h3 id="addData">Add your data below: </h3>
                     <input id="listDataInput" type="text" value="10, 55, 23, 98, 87, 78, 9, 4, 12, 35, 45" onchange=reset()><br>
-                    <button id="listSubmitData" type="button"  onclick=createNaturalMergeSortGraph()>Sort</button>
+                    <button id="listSubmitData" type="button"  onclick=createMergeSortGraph()>Sort</button>
                     <h3 id="invalidInputWarning" style="color:red;display: none;"> Invalid user input</h3>
                     <h3 id="smallInputWarning" style="color:orange;display: none;">Try input with more numbers</h3>
+
                 </div>
                 <div id="main" style="display: none; text-align: center;">
                     <div id="data">
@@ -30,7 +31,7 @@
                         <p1 id="sortedInputData"></p1>
                     </div>
                     <div id="chartBlock">
-                        <div id="naturalMergeSortChart"></div>
+                        <div id="mergeSortChart"></div>
                         <div id="navigationButton">
                             <button id="resetButton" type="button" onclick=reset()>Reset</button>
                             <button id="nextButton" type="button" onclick=sortStep()>Next</button>
@@ -41,7 +42,7 @@
                     </div>
                     <div id="informationBlock">
                         <div id="codeBlock" style="text-align: center;">
-                            <h3>Natural Merge Sort source code</h3>
+                            <h3>Merge Sort source code</h3>
                             <pre style="text-align: left;">
                                 def merge_routine(arr_a: List[int], arr_b: List[int]) -> List[int]:
                                     res = []
@@ -57,51 +58,49 @@
                                         else:
                                             res.append(arr_b.pop(0))
                                     return res
-                                
-                                def split_routine(arr: List[int]) -> List[List[int]]:
-                                    n = 0
-                                    res = []
-                                    sorted_sub_list = []
-                                    while n < len(arr)-1:
-                                        sorted_sub_list.append(arr[n])
-                                        if arr[n] > arr[n+1]:
-                                            res.append(sorted_sub_list)
-                                            sorted_sub_list = []
-                                    sorted_sub_list.append(arr[n])
-                                    res.append(sorted_sub_list)
-                                    return res
-                                
+                            
                                 def sort(arr: List[int]) -> List[int]:
-                                    mergeStack = split_routine(arr)
-                                    while len(mergeStack) > 1:
-                                        arr_a = mergeStack.pop(0)
-                                        arr_b = mergeStack.pop(0)
-                                        mergeStack.append(merge_routine(arr_a, arr_b))
-                                    return mergeStack[0]
+                                    if len(arr) == 1:
+                                        pass
+
+                                    elif len(arr) == 2:
+                                        if arr[0] > arr[1]:
+                                            arr[0], arr[1] = arr[1], arr[0]
+                            
+                                    else:
+                                        mid = len(arr) // 2
+                            
+                                        left, right = arr[:mid], arr[mid:]
+                                        left, right = sort(left), self.sort(right)
+                                        sorted_arr = merge_routine(left, right)
+                            
+                                        for i, _ in enumerate(arr):
+                                            arr[i] = sorted_arr[i]
+                                    return arr
                             </pre>
                         </div>
                         <div id="backgroundInfo">
                             <div id="wikiBlock">
                                 <h3>Information:</h3>
                                 <h6 id="Description">
-                                    Natural Merge Sort is a simple variation of the merge sort algorithm.
-                                    I can be shown to out perfrom simple merge sort in cases where data is already sorted. 
+                                    Merge Sort is genral puropse stable sort algorithm.   
+                                    It works by dividing the input into two halves, sorting each half, and then merging the two sorted halves back together. 
+                                
                                 </h6>
                             </div>
                             <div id="spaceTimeComplexty">
                                 <h3>Complexity:</h3>
-                                <h6 id="Description">The space complexity is O(N), the best case time complexity is O(N) and the average/worst case time complexity is O(N*Log(N)).</h6>
+                                <h6 id="Description">The space complexity is O(N), the average/worst case time complexity is O(N*Log(N)).</h6>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script type="text/javascript" src="../src/js/utils.js"></script>
-            <script type="text/javascript" src="../src/js/mergeSort.js"></script>
-            <script type="text/javascript" src="../src/js/naturalMergeSort.js"></script>
+            <script type="text/javascript" src="./js/utils.js"></script>
+            <script type="text/javascript" src="./js/mergeSort.js"></script>
             <script>
                 var data;
-                function createNaturalMergeSortGraph() {
+                function createMergeSortGraph() {
                     const userInput = document.getElementById('listDataInput').value
                     if (!validateData(userInput)) {
                         document.getElementById('invalidInputWarning').style.display = "block"
@@ -117,20 +116,21 @@
                         document.getElementById("sortedInputData").innerHTML = sortedInputData.join(", ")
                         chartHeight = 500;
                         chartWidth = document.getElementById("chartBlock").scrollWidth;
-                        data = initalizeNaturalMergeVar(unsortedInputData, "naturalMergeSortChart", "steelblue", "red", "yellow", "green", chartHeight, chartWidth)
+                        data = initalizeMergeVar(unsortedInputData, "mergeSortChart", "steelblue", "red", "yellow", "green", chartHeight, chartWidth)
+                        console.log(data)
                         createGraph(data);
                     }
                 }
 
                 function reset() {
-                    resetNaturalMergeSortUI(data)
+                    resetMergeSortUI(data)
                 }
 
                 function togglePlay() {
-                    toggleNaturalMergePlay(data)
+                    toggleMergePlay(data)
                 }
                 function sortStep () {
-                    naturalMergeSortStep(data)
+                    mergeSortStep(data)
                     updateRender(data)
                     if (data.sorted) {
                         data.sortedUpdateUI()
