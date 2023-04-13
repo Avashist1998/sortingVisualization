@@ -6,11 +6,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <link rel="stylesheet" href="./css/quickSort.css">
+        <link rel="stylesheet" href="../css/quickSort.css">
     </head>
     <body>
         <div class="topnav">
-            <a class="active" href="index.html">Home</a>
+            <a class="active" href="../index.html">Home</a>
         </div>
         <div class="content">
             <div> 
@@ -44,7 +44,7 @@
                             <h3>Quick Sort source code</h3>
                             <pre style="text-align: left;">
                                 def sort(arr: List[int]) -> List[int]:
-                                    if len(arr) < 2:
+                                    if len(arr) &#60; 2:
                                         return arr
                                     else:
                                         pivot = len(arr) - 1
@@ -54,7 +54,7 @@
                                         for i in range(pivot):
                                             if arr[i] > pivot_val:
                                                 right.append(arr[i])
-                                            elif arr[i] < pivot_val:
+                                            elif arr[i] &#60; pivot_val:
                                                 left.append(arr[i])
                                             else:
                                                 equal += 1
@@ -88,8 +88,8 @@
                     </div>
                 </div>
             </div>
-            <script type="text/javascript" src="./js/utils.js"></script>
-            <script type="text/javascript" src="./js/quickSort.js"></script>
+            <script type="text/javascript" src="../src/utils.js"></script>
+            <script type="text/javascript" src="../src/quickSort.js"></script>
             <script>
                 var data;
                 function createQuickSortGraph() {
