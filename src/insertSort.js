@@ -15,7 +15,7 @@ function initalizeInsertVar(numbers, id, baseColor, highLightColor, swapColor, s
         baseColor: baseColor, 
         sortedColor: sortedColor,
         highLightColor: highLightColor,
-        data: arrayToChartData(numbers, baseColor),
+        data: numberToSortData(numbers, baseColor),
         sortStep: insertSortStep,
         sortedUpdateUI: sortedUpdateButton
     }

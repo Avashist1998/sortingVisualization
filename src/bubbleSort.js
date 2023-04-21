@@ -4,7 +4,7 @@ function initalizeBubbleVar(numbers, id, baseColor, highLightColor, swapColor, s
         sortedIndex: numbers.length,
         height: height,
         width: width, 
-        data: arrayToChartData(numbers, baseColor),
+        data: numberToSortData(numbers, baseColor),
         timer: null,
         paused: true,
         needSwap: false,

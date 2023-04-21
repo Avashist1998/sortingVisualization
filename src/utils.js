@@ -1,34 +1,4 @@
-function validateData(userInput) {
-    if (userInput.length === 0) {
-        return false
-    } 
-    else if(!(/ ?([0-9]* ?,)/.test(userInput))){
-        return false
-    } else {
-        const data = convertData(userInput)
-        for (let val of data) {
-            if (val === undefined) {
-                return false
-            }
-            return true
-        }
-    }
-}
-
-function convertData(userInput) {
-    return  userInput.split(',').map(element => {
-        return Number(element);
-    })
-}
-
-function arrayToChartData (nums, color) {
-    let data = []
-    nums.map( (num, index) => {
-        data.push({init_index: index, value: num, color: color});
-    })
-    return data;
-}
-
+import { validateData, convertData, numberToSortData } from "./helper";
 
 function createBarChar(data, {
     x = (d, i) => i, // given d in data, returns the (ordinal) x-value
@@ -49,16 +19,16 @@ function createBarChar(data, {
 } = {}) {
 
     // Compute values.
-    X = d3.map(data, x);
-    Y = d3.map(data, y);
+    var X = d3.map(data, x);
+    var Y = d3.map(data, y);
 
     // Compute default domains, and unique the x-domain.
     if (xDomain === undefined) xDomain = X;
     if (yDomain === undefined) yDomain = [0, d3.max(Y)];
-    xDomain = new d3.InternSet(xDomain);
+    var xDomain = new d3.InternSet(xDomain);
 
     // Omit any data not present in the x-domain.
-    I = d3.range(X.length).filter(i => xDomain.has(X[i]));
+    var I = d3.range(X.length).filter(i => xDomain.has(X[i]));
 
     // Construct scales, axes, and formats.
     const xScale = d3.scaleBand(xDomain, xRange).padding(xPadding);
@@ -97,21 +67,21 @@ function createGraph(dataObject){
 }
 
 function updateRender (dataObject) {
-    xPadding = 0.1
-    xRange = [40, dataObject.width], 
-    yType = d3.scaleLinear
-    yRange = [dataObject.height - 30, 20]
+    const xPadding = 0.1
+    const xRange = [40, dataObject.width]
+    const yType = d3.scaleLinear
+    const yRange = [dataObject.height - 30, 20]
 
-    X = d3.map(dataObject.data, data => data.init_index);
-    Y = d3.map(dataObject.data, data => data.value);
+    const X = d3.map(dataObject.data, data => data.init_index);
+    const Y = d3.map(dataObject.data, data => data.value);
 
     // Compute default domains, and unique the x-domain.
-    xDomain = X;
-    yDomain = [0, d3.max(Y)];
+    var xDomain = X;
+    const yDomain = [0, d3.max(Y)];
     xDomain = new d3.InternSet(xDomain);
 
     // Omit any data not present in the x-domain.
-    I = d3.range(X.length).filter(i => xDomain.has(X[i]));
+    const I = d3.range(X.length).filter(i => xDomain.has(X[i]));
 
     // Construct scales, axes, and formats.
     const xScale = d3.scaleBand(xDomain, xRange).padding(xPadding);
@@ -149,3 +119,12 @@ function updateTimeSpeed(dataObject, val) {
         playSort(dataObject)
     }
 }
+
+window.convertData = convertData
+window.validateData = validateData
+window.numberToSortData = numberToSortData
+
+window.playSort = playSort
+window.createGraph = createGraph
+window.updateRender = updateRender
+window.updateTimeSpeed = updateTimeSpeed
