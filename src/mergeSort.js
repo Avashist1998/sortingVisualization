@@ -4,7 +4,7 @@ function initalizeMergeVar(numbers, id, baseColor, highLightColor, swapColor, so
         id: id,
         step: 0,
         sortedIndex: 0,
-        data: arrayToChartData(numbers, baseColor),
+        data: numberToSortData(numbers, baseColor),
         sorted: false,
         baseColor: baseColor,
         swapColor: swapColor,

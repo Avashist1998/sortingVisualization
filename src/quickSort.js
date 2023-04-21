@@ -12,7 +12,7 @@ function initalizeQuickVar(numbers, id, baseColor, pivotColor, highLightColor, s
         freeRunTime: 250*1.2,
         step: 0, 
         sortedIndex: 0, 
-        data: arrayToChartData(numbers, baseColor), 
+        data: numberToSortData(numbers, baseColor), 
         sorted: false, 
         width: width,
         height: height,
