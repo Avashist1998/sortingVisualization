@@ -96,3 +96,8 @@ function resetBubbleSortUI(dataObject) {
     document.getElementById('userInput').style.display = "block"
     document.getElementById('invalidInputWarning').style.display = "none"
 }
+
+window.initalizeBubbleVar = initalizeBubbleVar
+window.toggleBubblePlay = toggleBubblePlay
+window.resetBubbleSortUI = resetBubbleSortUI
+window.bubbleSortStep = bubbleSortStep

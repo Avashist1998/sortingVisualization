@@ -132,3 +132,8 @@ function resetQuickSortUI(dataObject) {
     document.getElementById('invalidInputWarning').style.display = "none"
 }
 
+
+window.initalizeQuickVar = initalizeQuickVar
+window.toggleQuickPlay = toggleQuickPlay
+window.resetQuickSortUI = resetQuickSortUI
+window.quickSortStep = quickSortStep

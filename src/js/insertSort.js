@@ -1,3 +1,5 @@
+
+
 function initalizeInsertVar(numbers, id, baseColor, highLightColor, swapColor, sortedColor, height, width) {
 
     return {id: id, 
@@ -21,6 +23,11 @@ function initalizeInsertVar(numbers, id, baseColor, highLightColor, swapColor, s
     }
 }
 
+function sortedUpdateButton() {
+    document.getElementById("nextButton").className = "disabled";
+    document.getElementById("playPauseButton").innerHTML = "Play";
+    document.getElementById("playPauseButton").className = "disabled";
+}
 
 function insertSortStep(dataObject) {
 
@@ -87,11 +94,6 @@ function pauseInsertSortRun(dataObject) {
 
 }
 
-function sortedUpdateButton() {
-    document.getElementById("nextButton").className = "disabled";
-    document.getElementById("playPauseButton").innerHTML = "Play";
-    document.getElementById("playPauseButton").className = "disabled";
-}
 
 function updateTimeSpeed(dataObject) {
     var val = document.getElementById("playSpeed").value
@@ -105,9 +107,9 @@ function updateTimeSpeed(dataObject) {
 }
 
 function resetInsertSortUI(dataObject) {
-
     clearInterval(dataObject.timer);
     d3.select("svg").remove()
+
     document.getElementById("nextButton").className = "button";
     document.getElementById("playPauseButton").innerHTML = "Play"
     document.getElementById("playPauseButton").className = "playButton"
@@ -115,5 +117,9 @@ function resetInsertSortUI(dataObject) {
     document.getElementById("main").style.display = "none";
     document.getElementById('userInput').style.display = "block"
     document.getElementById('invalidInputWarning').style.display = "none"
-
 }
+
+window.initalizeInsertVar = initalizeInsertVar;
+window.resetInsertSortUI = resetInsertSortUI;
+window.toggleInsertPlay = toggleInsertPlay;
+window.insertSortStep = insertSortStep;

@@ -1,4 +1,4 @@
-import { validateData, convertData, numberToSortData } from "./helper";
+import { validateData, convertData, numberToSortData } from "../ts/helper";
 
 function createBarChar(data, {
     x = (d, i) => i, // given d in data, returns the (ordinal) x-value
