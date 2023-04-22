@@ -109,3 +109,8 @@ function resetNaturalMergeSortUI(dataObject) {
     document.getElementById('invalidInputWarning').style.display = "none";
 }
 
+window.mergeStackStep = mergeSortStep
+window.naturalMergeSortStep = naturalMergeSortStep
+window.toggleNaturalMergePlay = toggleNaturalMergePlay
+window.resetNaturalMergeSortUI = resetNaturalMergeSortUI
+window.initalizeNaturalMergeVar = initalizeNaturalMergeVar

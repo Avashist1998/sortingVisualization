@@ -201,3 +201,10 @@ function resetMergeSortUI(dataObject) {
     document.getElementById('invalidInputWarning').style.display = "none"
 
 }
+
+
+
+window.initalizeMergeVar = initalizeMergeVar
+window.toggleMergePlay = toggleMergePlay
+window.resetMergeSortUI = resetMergeSortUI
+window.mergeSortStep = mergeSortStep
