@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/js/utils.js
 import { validateData, convertData, numberToSortData } from "../ts/helper";
-========
-import { validateData, convertData, numberToSortData } from "./helper";
->>>>>>>> 7bcdab1 (Typescript (#45)):src/utils.js
 
 function createBarChar(data, {
     x = (d, i) => i, // given d in data, returns the (ordinal) x-value
